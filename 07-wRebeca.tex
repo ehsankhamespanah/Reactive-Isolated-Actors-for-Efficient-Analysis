@@ -1,0 +1,87 @@
+\section{Verification of topology-dependent properties of Mobile Ad-hoc Protocols}\label{sec::wrebeca} 
+	%The computational model of Timed Rebeca makes it a faithful framework for modeling and analyzing network protocols based on asynchronous message passing, e.g., wireless protocols exploited in decentralized wireless networks.  
+	In decentralized wireless networks there is no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks, nodes continuously send messages to each other to self-configure the network on ad hoc. %Wireless Ad-hoc protocols are mainly defined in terms of how each message type is handled, which accurately map with the concept of message handlers in Timed Rebeca. %As specifications of protocols, like IETF documents, are given in plain English, there are many ambiguities in their descriptions. So there are various implementations (with different behaviors and hence, behavioral properties) by different communities based on their impressions. The formal specification language of Timed Rebeca makes it an appropriate candidate to document such protocols for precise specification, clear comprehension, and analysis. We found many ambiguities in Ad hoc On Demand Distance Vector (AODV) [], a prominent routing protocol for Ad hoc wireless networks. We communicated with the IETF group to resolve the problems, documented the three last revision of AODV in []. 
+	Ad-hoc wireless network consists of mobile nodes that freely move, so the underlying topology is dynamic. As wireless communication depends on the locality of nodes, i.e., the underlying topology, the behavior of nodes in mobile Ad-hoc networks depends on the topology. Therefore, the correctness properties of Mobile Ad-hoc Networks is weaker in comparison with wired networks. For instance, one of the main properties of routing protocols is \emph{loop-freedom}, i.e., no established route stored in the routing tables visits the same node more than once. However, in Ad-hoc networks, this property should hold for any mobility scenario. Another property for routing protocols is \emph{packet delivery}: always packets can be sent from a source to a connected destination. For mobile Ad-hoc networks, the packet delivery property is considered as if there is a path from a source to a destination for enough long period, any packet sent from a source can be received by the destination \cite{GlabbeekAWN}. Rebeca was extended in \cite{FOAC} to verify the topology-dependent properties of Ad-hoc protocols. Rebeca was extended by unicast and broadcast operators. %Thanks to its efficient analysis, we proposed an efficient version of AODV, precisely specified by wRebeca []. 
+	
+	\begin{figure*}
+		\begin{center}
+			\begin{lstlisting}[language=rebeca,multicols=2]
+			reactiveclass Node(){
+			statevars{
+			int sn,ip;
+			int[] dsn,rst,hops,nhop;
+			}
+			msgsrv initial(int i, 
+			boolean starter){ 
+			... /*Initialization code*/
+			}			
+			msgsrv rec\_newpkt(int data,int dip_)
+			{
+			if(rst[dip_]==1) 
+			{... /*forward packet*/}
+			else {                       
+			sn++;
+			rec_rreq(0,dip_,
+			dsn[dip_],self,sn,self,5);}
+			}   		
+			msgsrv rec_rreq (int hops_, int dip_ , int dsn_ , int oip_ , int osn_ , int sip_, int maxHop) 
+			{    
+			boolean gen_msg = false;
+			... /*processing code*/
+			if (gen_msg == true) {
+			if (ip == dip_) {
+			sn = sn+1;
+			unicast(nhop[oip_],
+			rec_rrep(0 , dip_ , sn , oip_ , self))
+			succ:{
+			rst[oip_] = 1;
+			}
+			unsucc:{
+			if(rst[oip_] == 1) 
+			{... /*error*/}
+			rst[oip_] = 2;}
+			} else {
+			hops_ = hops_ + 1;
+			if(hops_<maxHop) {
+			rec_rreq
+			(hops_,dip_,dsn_,oip_,
+			osn_,self,maxHop);} 
+			}}}  		
+			msgsrv rec_rrep(int hops_ ,int dip_ ,int dsn_ ,
+			int oip_ ,int sip_){      
+			boolean gen_msg = false;
+			... /*processing code*/
+			if(gen_msg == true){
+			if(ip == oip_ ){
+			... /*forward packet*/ }
+			else {
+			hops_= hops_+1;
+			unicast(nhop[oip_],rec_rrep
+			(hops_,dip_,dsn_,oip_,self))
+			succ:{
+			rst[oip_]=1;
+			}
+			unsucc:{
+			if(rst[oip_] == 1) 
+			{...} /*error*/
+			rst[oip_] = 2;}
+			}}}
+			msgsrv rec_rerr(int source_ ,
+			int sip_, int[] rip_rsn) 
+			{... /*error recovery code*/}
+			}
+			main{
+			Node n1(n2,n4):(0,true);
+			Node n2(n1,n4):(1,false);
+			...
+			constraints{
+			and(con(n1,n2), con(n3,n4)) 
+			}  
+			}
+			\end{lstlisting}
+		\end{center}
+		\caption{The AODV protocol specified by wRebeca \label{code:aodv}\cite{AODVFatemeh}}
+	\end{figure*} 
+	
+	
+	In the semantics of wRebeca, each semantic behavior is restricted to the set of topologies for which that behavior is valid. Such restrictions, expressed in terms of \emph{network constraints} \cite{FatemehFI10,FatemehFI19}, are used to verify the topology-dependent properties \cite{FORM,CSI2018}.To characterize the timing-dependent behavior of such protocols concerning mobility scenarios, Timed Rebeca was extended orthogonally with the topology concepts of wRebeca. For instance, the mobility scenario over which the maximal response time to find a routing path can be extracted via model checking technique. This was achieved by combining the floating-time idea of Timed Rebeca with network constraints exploited in wRebeca. 
