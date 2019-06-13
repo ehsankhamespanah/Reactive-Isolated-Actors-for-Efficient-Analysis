@@ -6,74 +6,202 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{listings}
+\usepackage{multicol}
+
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+%-------------------------
+\lstdefinelanguage{rebeca}{
+	morekeywords={reactiveclass, knownrebecs, statevars, main, msgsrv, constraints,con, main, define, LTL, CTL, boolean, int, shortint, byte, if, else, while, for, wait, msg, reset, set, self, false, true, now, after, delay, deadline, initial, unicast, succ, unsucc},
+	otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+	sensitive=true,
+	morecomment=[l]{//},
+	morecomment=[n]{/*}{*/},
+	morestring=[b]",
+	morestring=[b]',
+	morestring=[b]"""
+}
+%\captionsetup[lstlisting]{font={small}}
+\lstset{
+	language=rebeca,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	xleftmargin=10mm,
+	% basicstyle={\myttsize\ttfamily},
+	basicstyle={\small},
+	keywordstyle=\color{blue},
+	numbers=left,
+	numberstyle=\color{black},
+	numbersep=7pt,
+	stepnumber=1,
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=2,
+	numberblanklines=false,
+	frame=l
+}
+
 \begin{document}
-
-\title{Analysing Real-time Reactive Systems using Timed Actors
-\thanks{The authors would like to acknowledge DPAC and SEADA.}
-}
-
-\author{\IEEEauthorblockN{Marjan Sirjani}
-\IEEEauthorblockA{\textit{IDT Department} \\
-\textit{MDH}\\
-Vasteras, Sweden \\
-marjan.sirjani@mdh.se}
-\and
-\IEEEauthorblockN{Ehsan Khamespanah}
-\IEEEauthorblockA{\textit{School of Computer Sceince} \\
-\textit{Reykjavik University)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{Fatemeh Ghassemi}
-\IEEEauthorblockA{\textit{School of ECE} \\
-\textit{University of Tehran)}\\
-City, Country \\
-email address}
-}
-
-\maketitle
-
-\begin{abstract}
-I will introduce timed actors for modeling distributed systems and will explain our theories, techniques and tools for model checking and performance evaluation of such models. Timed Rebeca can be used to model asynchronous event-based components in systems, and real time constraints can be captured in the language. I will explain how floating-time transition system can be used for model checking of such models when we are interested in event-based properties, and how it helps in state space reduction. I will show different applications of our approach including analysing a wireless sensor network application, mobile ad-hoc network protocols, network-on-chip designs, and a macroscopic agent-based simulation of urban planning.
-\end{abstract}
-
-\begin{IEEEkeywords}
-Actors, Real-time systems\end{IEEEkeywords}
-
-\section{Introduction}
-
-Message of the paper:
-The actor-based language, Rebeca, provides a usable and analyzable model for distributed, concurrent, event-based asynchronous systems (Cyber-Physical systems).
-
-Floating Time Transition System is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
-
-How models shape the thought and ease the analysis
-
-
-Reactive systems
-
-Faithflness:
-From Rocco paper: a major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation.
-
-Reactive actors: 
-
-FTTS: Isolation
-
-Hybrid Rebeca
-
-wRebeca
-
-
-\section*{Acknowledgment}
-\section*{References}
-
-
-
-\begin{thebibliography}{00}
-
-\end{thebibliography}
-
+	
+	\title{Reactive Actors in Isolation for Efficient Analysis 
+		\thanks{The authors would like to acknowledge DPAC and SEADA.}
+	}
+	
+	\author{\IEEEauthorblockN{Marjan Sirjani}
+		\IEEEauthorblockA{\textit{IDT Department} \\
+			\textit{MDH}\\
+			Vasteras, Sweden \\
+			marjan.sirjani@mdh.se}
+		\and
+		\IEEEauthorblockN{Ehsan Khamespanah}
+		\IEEEauthorblockA{\textit{School of Computer Sceince} \\
+			\textit{Reykjavik University)}\\
+			City, Country \\
+			email address}
+		\and
+		\IEEEauthorblockN{Fatemeh Ghassemi}
+		\IEEEauthorblockA{\textit{School of ECE} \\
+			\textit{University of Tehran)}\\
+			City, Country \\
+			email address}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		I will introduce timed actors for modeling distributed systems and will explain our theories, techniques and tools for model checking and performance evaluation of such models. Timed Rebeca can be used to model asynchronous event-based components in systems, and real time constraints can be captured in the language. I will explain how floating-time transition system can be used for model checking of such models when we are interested in event-based properties, and how it helps in state space reduction. I will show different applications of our approach including analysing a wireless sensor network application, mobile ad-hoc network protocols, network-on-chip designs, and a macroscopic agent-based simulation of urban planning.
+	\end{abstract}
+	
+	\begin{IEEEkeywords}
+		Actors, Real-time systems\end{IEEEkeywords}
+	
+	\section{Introduction}
+	
+	Message of the paper:
+	The actor-based language, Rebeca, provides a usable and analyzable model for distributed, concurrent, event-based asynchronous systems (Cyber-Physical systems).
+	
+	Floating Time Transition System is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
+	
+	How models shape the thought and ease the analysis
+	
+	
+	Reactive systems
+	
+	Faithflness:
+	From Rocco paper: a major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation.
+	
+	Reactive actors: 
+	
+	FTTS: Isolation
+	
+	\section{Verification of topology-dependent properties of Mobile Ad-hoc Protocols}\label{sec::wrebeca} 
+	%The computational model of Timed Rebeca makes it a faithful framework for modeling and analyzing network protocols based on asynchronous message passing, e.g., wireless protocols exploited in decentralized wireless networks.  
+	In decentralized wireless networks there is no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks, nodes continuously send messages to each other to self-configure the network on ad hoc. %Wireless Ad-hoc protocols are mainly defined in terms of how each message type is handled, which accurately map with the concept of message handlers in Timed Rebeca. %As specifications of protocols, like IETF documents, are given in plain English, there are many ambiguities in their descriptions. So there are various implementations (with different behaviors and hence, behavioral properties) by different communities based on their impressions. The formal specification language of Timed Rebeca makes it an appropriate candidate to document such protocols for precise specification, clear comprehension, and analysis. We found many ambiguities in Ad hoc On Demand Distance Vector (AODV) [], a prominent routing protocol for Ad hoc wireless networks. We communicated with the IETF group to resolve the problems, documented the three last revision of AODV in []. 
+	Ad-hoc wireless network consists of mobile nodes that freely move, so the underlying topology is dynamic. As wireless communication depends on the locality of nodes, i.e., the underlying topology, the behavior of nodes in mobile Ad-hoc networks depends on the topology. Therefore, the correctness properties of Mobile Ad-hoc Networks is weaker in comparison with wired networks. For instance, one of the main properties of routing protocols is \emph{loop-freedom}, i.e., no established route stored in the routing tables visits the same node more than once. However, in Ad-hoc networks, this property should hold for any mobility scenario. Another property for routing protocols is \emph{packet delivery}: always packets can be sent from a source to a connected destination. For mobile Ad-hoc networks, the packet delivery property is considered as if there is a path from a source to a destination for enough long period, any packet sent from a source can be received by the destination \cite{GlabbeekAWN}. Rebeca was extended in \cite{FOAC} to verify the topology-dependent properties of Ad-hoc protocols. Rebeca was extended by unicast and broadcast operators. %Thanks to its efficient analysis, we proposed an efficient version of AODV, precisely specified by wRebeca []. 
+	
+	\begin{figure*}
+		\begin{center}
+			\begin{lstlisting}[language=rebeca,multicols=2]
+			reactiveclass Node(){
+			statevars{
+			int sn,ip;
+			int[] dsn,rst,hops,nhop;
+			}
+			msgsrv initial(int i, 
+			boolean starter){ 
+			... /*Initialization code*/
+			}			
+			msgsrv rec\_newpkt(int data,int dip_)
+			{
+			if(rst[dip_]==1) 
+			{... /*forward packet*/}
+			else {                       
+			sn++;
+			rec_rreq(0,dip_,
+			dsn[dip_],self,sn,self,5);}
+			}   		
+			msgsrv rec_rreq (int hops_, int dip_ , int dsn_ , int oip_ , int osn_ , int sip_, int maxHop) 
+			{    
+			boolean gen_msg = false;
+			... /*processing code*/
+			if (gen_msg == true) {
+			if (ip == dip_) {
+			sn = sn+1;
+			unicast(nhop[oip_],
+			rec_rrep(0 , dip_ , sn , oip_ , self))
+			succ:{
+			rst[oip_] = 1;
+			}
+			unsucc:{
+			if(rst[oip_] == 1) 
+			{... /*error*/}
+			rst[oip_] = 2;}
+			} else {
+			hops_ = hops_ + 1;
+			if(hops_<maxHop) {
+			rec_rreq
+			(hops_,dip_,dsn_,oip_,
+			osn_,self,maxHop);} 
+			}}}  		
+			msgsrv rec_rrep(int hops_ ,int dip_ ,int dsn_ ,
+			int oip_ ,int sip_){      
+			boolean gen_msg = false;
+			... /*processing code*/
+			if(gen_msg == true){
+			if(ip == oip_ ){
+			... /*forward packet*/ }
+			else {
+			hops_= hops_+1;
+			unicast(nhop[oip_],rec_rrep
+			(hops_,dip_,dsn_,oip_,self))
+			succ:{
+			rst[oip_]=1;
+			}
+			unsucc:{
+			if(rst[oip_] == 1) 
+			{...} /*error*/
+			rst[oip_] = 2;}
+			}}}
+			msgsrv rec_rerr(int source_ ,
+			int sip_, int[] rip_rsn) 
+			{... /*error recovery code*/}
+			}
+			main{
+			Node n1(n2,n4):(0,true);
+			Node n2(n1,n4):(1,false);
+			...
+			constraints{
+			and(con(n1,n2), con(n3,n4)) 
+			}  
+			}
+			\end{lstlisting}
+		\end{center}
+		\caption{The AODV protocol specified by wRebeca \label{code:aodv}\cite{AODVFatemeh}}
+	\end{figure*} 
+	
+	
+	In the semantics of wRebeca, each semantic behavior is restricted to the set of topologies for which that behavior is valid. Such restrictions, expressed in terms of \emph{network constraints} \cite{FatemehFI10,FatemehFI19}, are used to verify the topology-dependent properties \cite{FORM,CSI2018}.To characterize the timing-dependent behavior of such protocols concerning mobility scenarios, Timed Rebeca was extended orthogonally with the topology concepts of wRebeca. For instance, the mobility scenario over which the maximal response time to find a routing path can be extracted via model checking technique. This was achieved by combining the floating-time idea of Timed Rebeca with network constraints exploited in wRebeca. 
+	
+	\section{Verification of systems with continuous behaviors}
+	Embedded systems consist of microprocessors which control physical behavior. In such \emph{hybrid} systems, physical and cyber behaviors, characterized as continuous and discrete respectively, affect each other; the physical components may trigger the cyber components which change (by (de)activating) physical components in response. The new generation of embedded systems, cyber-physical systems (CPSs) composed of microprocessors controlling other software/physical systems via networks. For instance, in automotive systems, there are components like sensors, actuators, and controllers that communicate asynchronously with each other through a CAN network. The computational model of Rebeca provides a suitable level of abstraction to faithfully model such distributed asynchronously communicating systems in an intuitive way.
+	Timed Rebeca was extended by Hybrid Rebeca [] with physical behavior to support hybrid systems. Such an extension allows non-determinism inherent in concurrent and distributed systems, e. g., in the case of simultaneous arrival of messages (and no explicit priority-based policy to choose one over the other) to model check the possible implementations of systems. In Hybrid Rebeca, physical behaviors are encapsulated in so-called physical actors. Each physical actor, in addition to message handlers, is defined by a set of modes. Each mode defines the continuous behavior of the actor. A physical actor (which is instantiated from a physical class) must always have one active mode. By changing the active mode of a physical actor, it's possible to change the continuous behavior of the actor. The active mode can be changed upon receiving a message from either a software actor (controller) or a physical actor. The semantics of Hybrid Rebeca is defined as a hybrid automaton, for which many verification algorithms and tools are available. 
+	We have shown that by using Hybrid Rebeca, the cost of improving and modifying models is vastly reduced compared to modeling in hybrid automata [] as the computational model of Hybrid Rebeca encapsulates many complexities. These complexities subsume high-level concepts like message passing and message buffering. Furthermore, modeling these complexities directly in hybrid automata can hugely decrease the analyzability of the models. Concluding that the abstraction resulted from choosing actors as the basic units of computation, offers more friendliness towards cyber-physical systems compared to the low-level languages like hybrid automata.
+	
+	
+	
+	\section*{Acknowledgment}
+	\section*{References}
+	
+	\bibliography{ref}
+	\bibliographystyle{plain}
+	
+	%\begin{thebibliography}{00}
+	
+	%\end{thebibliography}
+	
 \end{document}
