@@ -1,0 +1,73 @@
+\begin{lstlisting}[language=rebeca,multicols=2]
+reactiveclass Node(){
+	statevars{
+		int sn,ip;
+		int[] dsn,rst,hops,nhop;
+	}
+	msgsrv initial(int i, 
+			boolean starter){ 
+		... /*Initialization code*/
+	}			
+	msgsrv rec_newpkt(int data,int dip_)
+	{
+		if(rst[dip_]==1) 
+		{... /*forward packet*/}
+		else {                       
+			sn++;
+			rec_rreq(0,dip_,
+				dsn[dip_],self,sn,self,5);}
+		}   		
+	msgsrv rec_rreq (int hops_, int dip_ , int dsn_ , int oip_ , int osn_ , int sip_, int maxHop) 
+	{    
+	boolean gen_msg = false;
+	... /*processing code*/
+	if (gen_msg == true) {
+		if (ip == dip_) {
+			sn = sn+1;
+			unicast(nhop[oip_],
+				rec_rrep(0 , dip_ , sn , oip_ , self))
+			succ:{
+				rst[oip_] = 1;
+			}
+			unsucc:{
+				if(rst[oip_] == 1) 
+					{... /*error*/}
+					rst[oip_] = 2;}
+				} else {
+					hops_ = hops_ + 1;
+					if(hops_<maxHop) {
+						rec_rreq(hops_,dip_,dsn_,oip_,
+							osn_,self,maxHop);} 
+	}}}  		
+	msgsrv rec_rrep(int hops_ ,int dip_ ,int dsn_ ,
+		int oip_ ,int sip_){      
+		boolean gen_msg = false;
+		... /*processing code*/
+		if(gen_msg == true){
+			if(ip == oip_ ){
+				... /*forward packet*/ }
+			else {
+				hops_= hops_+1;
+				unicast(nhop[oip_],rec_rrep
+					(hops_,dip_,dsn_,oip_,self))
+				succ:{
+					rst[oip_]=1;
+				}
+				unsucc:{
+					if(rst[oip_] == 1) 
+						{...} /*error*/
+				rst[oip_] = 2;}
+	}}}
+	msgsrv rec_rerr(int source_ ,
+		int sip_, int[] rip_rsn) 
+	{... /*error recovery code*/}
+	}
+	main{
+		Node n1(n2,n4):(0,true);
+		Node n2(n1,n4):(1,false);
+		...
+	constraints{
+		and(con(n1,n2), con(n3,n4)) 
+	}  
+}
+\end{lstlisting}
