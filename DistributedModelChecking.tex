@@ -1,1 +1,20 @@
 \section{Distributed Model Checking} \label{sec::DMC}
+In addition to benefiting from the isolation of actors for reducing the size of state spaces, this property can be used for more efficient analysis of huge state spaces. A major limiting factor in applying model checking for the analysis of real-world systems is the huge amount of space and time required to store and explore state spaces. Distributed model checking is a technique for analyzing these types of state spaces; in which, state spaces are partitioned into some slices and each slice is assigned to a computational node to be analyzed. The efficiency of this technique depends on the communication costs among computational nodes \cite{distributionPolicy}. 
+The communication cost directly relates to the distribution policy of states among nodes, 
+as detecting accepting cycles that span over many different nodes requires communication. 
+
+Another, more fine-grained, representative of communication cost is the number of split transitions; 
+a split transition is a transition between two states,  where the hosts of source and destination states are different nodes. 
+
+In the present work, we tackle the state distribution policy problem in the 
+%smrm 
+%model checking 
+state space generation of actor models \cite{Hewitt72}. We introduce a new state distribution policy based on the so-called Call Dependency Graph (CDG) of actor models. A CDG represents the abstract causality relation among messages of actors (Section~\ref{sec::cdg}). Our abstraction is akin to the dynamic representation of actor's event activation causality proposed by Clinger \cite{clinger}. 
+
+The most primitive and widely used distribution policy is random state distribution \cite{DBLP:journals/entcs/GaravelMS13,DBLP:journals/entcs/BarnatHR13,DBLP:journals/corr/abs-1111-0374,acceptingPredecessor}. Random state distribution policy distributes states among nodes based on their hash values. Random distribution policy guarantees load balancing. However, it is not an effective technique as cycles are scattered over many different nodes. In \cite{clusterBased}, state distribution is performed based on the B\"{u}chi automata of the properties. LTL model checkers find accepting cycles in the synchronous product of the state space and the B\"{u}chi automata of LTL specifications. Therefore, distributing states based on the strongly connected components of the property B\"{u}chi automata avoids creation of split cycles in the state space. This way, there is no need for communication among nodes for detecting accepting cycles. In practice, the corresponding B\"{u}chi automata of LTL properties do not have many strongly connected components. Hence, this approach does not work efficiently in most practical cases.
+
+
+In \cite{distributionPolicy}, another state space distribution policy is suggested to improve the locality of cycles.
+This policy is based on the static analysis of an abstracted model and detects \emph{may} or \emph{must} transition relations among states \cite{mayMustRelation}. Based on this analysis, if two states have a \emph{must} relation, they should be stored in a same node.
+We use a similar idea in our state distribution policy and show that using the CDG improves the locality of cycles by reducing the split transitions in the state space. In other words, we find the \emph{must} relations among the states of actor models using the CDG. Our technique is applicable to other service-oriented models where the unit of concurrency can be modeled as an autonomous active object and message passing is the only way of communication. To illustrate the applicability of our method, we implement it in the distributed model checker of Rebeca, which is an actor-based language for modeling and model checking of reactive systems  (Section~\ref{sec::pre}). 
+The experimental results of using CDG illustrate that the number of split transitions is reduced significantly by up to  50\% (Section~\ref{sec::exp}). We also discuss possible extensions of our work and possible application domains for it (Section~\ref{sec::conc}).
