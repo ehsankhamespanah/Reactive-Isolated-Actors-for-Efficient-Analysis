@@ -19,7 +19,8 @@
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
 		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
+\newcommand{\conn}{\!\rightsquigarrow\!}
+\newcommand{\nconn}{\!\mathrel{\hspace{.1em}\not\hspace{-.1em}\rightsquigarrow}\!}
 %-------------------------
 \lstdefinelanguage{rebeca}{
 	morekeywords={reactiveclass, knownrebecs, statevars, main, msgsrv, constraints,con, main, define, LTL, CTL, boolean, int, shortint, byte, if, else, while, for, wait, msg, reset, set, self, false, true, now, after, delay, deadline, initial, unicast, succ, unsucc},

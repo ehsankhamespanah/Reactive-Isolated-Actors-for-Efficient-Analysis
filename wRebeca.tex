@@ -1,17 +1,23 @@
 \section{Verification of Mobile Ad-hoc Protocols}\label{sec::wrebeca} 
-%The computational model of Timed Rebeca makes it a faithful framework for modeling and analyzing network protocols based on asynchronous message passing, e.g., wireless protocols exploited in decentralized wireless networks.  
-In decentralized wireless networks there is no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks, so nodes continuously send messages to each other to self-configure the network on ad hoc. %Wireless Ad-hoc protocols are mainly defined in terms of how each message type is handled, which accurately map with the concept of message handlers in Timed Rebeca. %As specifications of protocols, like IETF documents, are given in plain English, there are many ambiguities in their descriptions. So there are various implementations (with different behaviors and hence, behavioral properties) by different communities based on their impressions. The formal specification language of Timed Rebeca makes it an appropriate candidate to document such protocols for precise specification, clear comprehension, and analysis. We found many ambiguities in Ad hoc On Demand Distance Vector (AODV) [], a prominent routing protocol for Ad hoc wireless networks. We communicated with the IETF group to resolve the problems, documented the three last revision of AODV in []. 
-Mobile Ad-hoc wireless networks (MANETs) consist of mobile nodes that freely move, so the underlying topology is dynamic. As wireless communication depends on the locality of nodes, i.e., the underlying topology, the behavior of nodes depends on the topology. Therefore, the correctness properties of MANETs are topology-dependent and hence, weaker in comparison with wired networks. For instance, one of the main properties of routing protocols is \emph{loop-freedom}, i.e., no established route stored in the routing tables visits the same node more than once. 
-\fixme{why "However"?}
-However, in MANETs, this property should hold for any mobility scenario. Another property for routing protocols is \emph{packet delivery}: always packets can be sent from a source to a connected destination. For MANETs, the packet delivery property is considered as whenever there is a path from a source to a destination for enough long period, any packet sent from a source can be received by the destination \cite{GlabbeekAWN}.
+Mobile Ad-hoc wireless networks (MANETs) consist of mobile nodes equipped by wireless transceivers by which they communicate. These networks are useful where no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks are needed, so the network operates in a completely distributed manner. A node $A$ can receive data from a node $B$ if $A$ is located in the communication range of $B$, i.e., $A$ is directly connected to $B$. The union of (dis)connectivity relations among the node forms the underlying topology.  Due to the mobility of node, (dis)connectivity relations among nodes change, and the topology is dynamic. As all nodes are not directly connected, they rely on each other to communicate indirectly with those not within their range. To this aim, they collaborate on ad-hoc to find a valid route to a destination. A route is valid if the corresponding path exists in the topology, and it is partially maintained in the routing tables of nodes by indicating the next-hop(s) to the destination. As topology changes, the routes maintained by nodes should be updated to prevent from useless communications leading to the energy consumption and network degradation. During the process of route maintenance, it is possible that by following next-hops, a route visits the same node more than once, and a loop is formed. To avoid cycling data in a MANET, \emph{loop-freedom} is one of the main properties of routing protocols MANET routing. Due to enormous number of topology changes, finding the mobility scenario leading to protocol malfunction, e.g., formation of a loop for routing protocols,  %checking non-existence of loops 
+is not possible by simulation-based approaches, and so their design is error-prone in practice.   %designing MANET protocols is not easy in practice and  can be found by simulation-based approaches.  
 
-Rebeca was extended in \cite{FOAC}, called wRebeca, to verify the topology-dependent properties of MANET protocols. To support modeling such protocols, wRebeca provides unicast, multicast, and broadcast for communication. %Thanks to its efficient analysis, we proposed an efficient version of AODV, precisely specified by wRebeca []. 
-For instance, consider the specification of a node implementing Ad-hoc On Demand Vector (AODV) routing protocol \cite{AODV} in Figure \ref{code:aodv}. 
+%As wireless communication depends on the locality of nodes, i.e., the underlying topology, the behavior of nodes depends on the topology. Therefore, the correctness properties of MANETs are topology-dependent and hence, weaker in comparison with wired networks. For instance, one of the main properties of routing protocols is \emph{loop-freedom}, i.e., no established route stored in the routing tables visits the same node more than once. 
+%\fixme{why "However"?}
+%However, in MANETs, this property should hold for any mobility scenario. Another property for routing protocols is \emph{packet delivery}: always packets can be sent from a source to a connected destination. For MANETs, the packet delivery property is considered as whenever there is a path from a source to a destination for enough long period, any packet sent from a source can be received by the destination \cite{GlabbeekAWN}.
+
+Rebeca was extended in \cite{FOAC}, called wRebeca, to model and verify %the topology-dependent properties of 
+MANET protocols addressing dynamically changing topology. To support modeling such protocols, wRebeca provides unicast, multicast, and broadcast for communication. The wRebeca model of an abstract version of Ad-hoc On Demand Vector (AODV) routing protocol \cite{AODV} is given in Figure \ref{code:aodv}. Each node in the network is modeled as an actor, and the routing protocol
+is represented through the message servers of the actor. The network topology and its mobility are captured while analyzing the model, and are not explicitly modeled in the wRebeca code.  
 %
-\fixme{Long and confusing sentences (the ones below) - maybe you can use my friendliness paper for simpler explanation, I didn't check.}
-In this protocol when a node has data to send to a destination (${\it dip\_}$), informed by receiving ${\it rec\_newpkt}$ from the upper-layer application, it will initiate the \emph{route discovery} procedure if it has no routing to the destination in its routing table (${\it rst}[{\it dip\_}]$) by broadcasting a \emph{request} message (${\it rec\_rreq}$) at line $16$. 
+%\fixme{Long and confusing sentences (the ones below) - maybe you can use my friendliness paper for simpler explanation, I didn't check.}
+In message server ${\it rec\_newpkt}$ (line $10$),
+whenever a source node intends to send a data packet to a destination (${\it dip\_}$), %informed by receiving ${\it rec\_newpkt}$ from the upper-layer application, it will initiate the \emph{route discovery} procedure 
+first it looks up at its routing table, ${\it rst}[{\it dip\_}]$, to see if it has a valid route to the destination to forward the data packet. Otherwise it starts a route discovery by broadcasting a route \emph{request} message, ${\it rec\_rreq}$, at line $16$. 
 %
-Nodes upon receiving a request message, forward the request if they do not have any route to the destination until it reaches to the destination (line $24$). Now the destination replies by unicasting a \emph{reply} message (${\it rec\_rep}$) in response (line $26$) to the sender of the request (${\it oip\_}$). The reply message is regulated by the middle nodes until it arrives to the originator (line $48$).
+Nodes upon receiving a request message, forward the request if they do not have any route to the destination until the request reaches to the destination (line $24$). Now the destination replies by unicasting a \emph{reply} message, ${\it rec\_rep}$, in response (line $26$) to the sender of the request (${\it oip\_}$) via its next-hop. The unicast message will be delivered
+successfully ($\it succ$ in line $28$) if the receiver node is in the wireless range, or the
+delivery can fail ($\it unsucc$ in line $31$) if the receiver node is not in the wireless range. The reply message is resent by the middle nodes until it arrives to the source node (line $48$).
 
 \begin{figure*}
 	\begin{center}
@@ -22,16 +28,73 @@ Nodes upon receiving a request message, forward the request if they do not have 
 	\caption{The AODV protocol specified by wRebeca \label{code:aodv}\cite{FOAC}}
 \end{figure*} 
 
-The global states of a semantic model
-\fixme{What is a semantic model? I remember having this discussion with you when I was writing the friendliness paper. }
-are defined by the local state of rebecs and the underlying topology. As mobility is the intrinsic characteristic of nodes, the dynamism of the topology is not explicitly defined as part of the protocol specification. Conversely, for each global state, there are a set of semantic transitions by which the underlying topology is implicitly changed.  For a network of $n$ nodes, there are $(n^2-n)/2$ possible links among them and by assuming the links are symmetrical, the state pace grows with a factor of $2^{(n^2-n)/2}$. 
+The global states %of a semantic model
+are defined by the local state of rebecs and the underlying topology. %As mobility is the intrinsic characteristic of nodes, the dynamism of the topology is not explicitly defined as part of the protocol specification. 
+To capture topology changes, for each global state, there are a set of state transitions by which the underlying topology is randomly changed.  For a network of $n$ nodes, there are $(n^2-n)$ possible links among them, %and by assuming the links are symmetrical, 
+so the state pace grows with a factor of $2^{(n^2-n)}$. 
 
-To efficiently generate the semantic model of wRebeca, %as rebecs moves independently, 
-we eliminate the topology from the global states and instead %define out of the have no shared variable, the semantic model can be  
-%In the semantics of wRebeca, 
-each semantic transition corresponds to the processing of an event as before while it is restricted to the set of topologies for which that behavior is valid.  We explain this by an example. Recall that a destination node upon receiving a request message unicasts a \emph{reply} message (${\it rec\_rep}$) to the node that has a route (called \emph{next hop}) to the sender $({\it oip\_})$ of the request (line $26$ in Figure \ref{code:aodv}). In the efficient semantic model for processing the ${\it rec\_rep}$ event, only two next states are considered; one for topologies in which the destination is connected to the next hop, and one for those that they are disconnected. These topologies are expressed in terms of \emph{network constraints} \cite{FatemehFI10,FatemehFI19}. 
+To tackle the state space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. To capture the effect of topology, the (dis)connectivity of those links that result the same behaviors are added to the labels on the transitions. A set of (dis-)connectivity relations among two actors, expressing the status of their link, is called \emph{network constraints}~\cite{FatemehFI10,FatemehFI19}. For instance, ${\it and}({\it con}(n1,n2),!{\it con}(n3,n4)$ denotes that the actor  $n1$ is connected to $n2$ while $n_3$ is disconnected from $n4$. The network constraint of each state transition isolates those connected actors and computes the effect of processing of events. %an event while isolating those connected actors. %while it is restricted to the set of topologies for which that behavior is valid. 
+We elaborate the idea with an example. Recall that a destination node, upon receiving a request message unicasts ${\it rec\_rep}$ to the next-hop of the request origin $({\it oip\_})$ (line $26$ in Figure \ref{code:aodv}). In the reduced state space,  for the global states in which the destination has a ${\it rec\_req}$ message to handle, at least two next states are considered; one for the case that the destination is connected to the next-hop, and one for the case that they are disconnected. In the first case, the destination and next-hop are considered in isolation and the effect of processing a request message is computed by inserting a ${\it rec\_rep}$ message in the queue of the next-hop. The second case partitions actors in further as the destination should informs its upstream nodes that the next-hop is not reachable through it by broadcasting an error message (this part of code has been abstracted). In other words, the effect of processing the request event is computed for those subsets of actors excluding the next-hop in isolation. This scenario has been illustrated in Figure \ref{Fig::reduction} in a MANET with four nodes. Assume that $n_1$ and $n_3$ are the source and destination, respectively, and $n_3$ has received its request message from $n_2$. The next-hop to $n_2$ for $n_3$ is $n_4$.  
 
-Network constraints are a set of (dis-)connectivity relations between two addresses. For instance, ${\it and}({\it con}(n1,n2),!{\it con}(n3,n4)$ denotes that the nodes with addresses $n1$ and $n2$ are connected while $n_3$ and $n4$ are disconnected. To enforce a set of stable connectivity relations among the nodes, they can be specified in \emph{constraints} block at line $68$ of Figure \ref{code:aodv}. This approach reduces the state space substantially for real-world protocols and hence, makes the model checking technique possible as shown in Table \ref{Tab:aodv-redu}. When the number of nodes increases from $4$ to $5$, and the initial network constraint results $16$ possible topologies, the classic state space cannot be generated due to the memory limitation on a computer with 8GB RAM. The network constraints on transition are used during the model checking algorithm of \cite{FORM} or property specifications \cite{CSI2018} to verify the topology-dependent properties. 
+
+\begin{figure}
+   	%\begin{tikzpicture}[scale=.8, transform shape]
+	   %	\input{reductionFig.tex}
+   	%\end{tikzpicture}
+%---------------------
+\begin{tikzpicture}[scale=.75, transform shape]
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n1) at (0,-0.5) {$\begin{array}{l} 
+	n_1:(\nu_1,q_1)\\ 
+	n_2:(\nu_2,q_2)\\
+	n_3:(\nu_3,\langle {\it rec\_req}|q_3\rangle)\\
+	n_4: (\nu_4,q_4)
+	\end{array}	$};
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n2) at (0.1,-3)
+{$\begin{array}{l} 
+	n_1:(\nu_1,q_1)\\ 
+	n_2:(\nu_2,q_2)\\
+	n_3:(\nu_3',q_3)\\
+	n_4:(\nu_4,q_4\oplus \{{\it rec\_rep}\})\\
+	\end{array}$};
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n3) at (5,2)
+{$\begin{array}{l} 
+	n_1:(\nu_1,q_1\oplus \{{\it err}\})\\ 
+	n_2:(\nu_2,q_2\oplus \{{\it err}\})\\
+	n_3:(\nu_3'',q_3)\\
+	n_4:(\nu_4,q_4)\\
+	\end{array}$};
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n4) at (7,-0.5)
+{$\begin{array}{l} 
+	n_1:(\nu_1,q_1)\\ 
+	n_2:(\nu_2,q_2\oplus \{{\it err}\})\\
+	n_3:(\nu_3'',q_3)\\
+	n_4:(\nu_4,q_4)\\
+	\end{array}$};
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n5) at (5,-3)
+{$\begin{array}{l} 
+	n_1:(\nu_1,q_1\oplus \{{\it err}\})\\ 
+	n_2:(\nu_2,q_2)\\
+	n_3:(\nu_3'',q_3)\\
+	n_4:(\nu_4,q_4)\\
+	\end{array}$};
+\node [draw,outer sep=0,inner sep=3,minimum size=10] (n6) at (0,2)
+{$\begin{array}{l} 
+	n_1:(\nu_1,q_1)\\ 
+	n_2:(\nu_2,q_2)\\
+	n_3:(\nu_3'',q_3)\\
+	n_4:(\nu_4,q_4)\\
+	\end{array}$};
+ \draw[->] (n1) edge node[left]{$\{n_3\conn n_4\}$} (n2);
+  \draw[->] (n1) edge node{$\{n_3\nconn n_4,n_3\conn n_1,n_2\}$} (n3);
+  \draw[->] (n1) edge node[above]{$\{n_3\nconn n_4,n_1, n_3\conn n_2\}$} (n4);
+  \draw[->] (n1) edge node{$\{n_3\nconn n_4,n_2,n_3\conn n_1\}$} (n5);
+  \draw[->] (n1) edge node[left]{$\{n_3\nconn n_4,n_1,n_2\}$} (n6);
+\end{tikzpicture}   	
+   	\caption{Possible next states upon handling of a request message: connectivity and disconnectivity relation are represented by the notation $\conn $ and $\nconn$, respectively.}\label{Fig::reduction}
+\end{figure}
+
+To enforce a set of stable (dis)connectivity relations among the actors to govern the level of isolation, they can be specified in \emph{constraints} block at line $68$ of Figure \ref{code:aodv}. This approach reduces the state space substantially for real-world protocols and hence, makes the model checking technique possible as shown in Table \ref{Tab:aodv-redu}. When the number of nodes increases from $4$ to $5$ for AODV, and the network constraint results $16$ possible topologies, the classic state space cannot be generated due to the memory limitation on a computer with $8${GB} {RAM}.  We proved that the reduced state space is branching bisimilar to the
+original one, and consequently a set of properties such as {ACTL-X} are preserved \cite{FOAC}. The network constraints on transition are used during model checking \cite{FORM,CSI2018} to verify the topology-sensitive properties. 
 
 \begin{table*}
 	%   \renewcommand{\arraystretch}{1.5}
@@ -55,14 +118,16 @@ Network constraints are a set of (dis-)connectivity relations between two addres
 	\label{Tab:aodv-redu}
 \end{table*}
 
-The reduction technique can be improved further if the topology be stable. As rebecs have no shared variable, the state space of network consisted of homogeneous nodes can be reduced by the \emph{counter abstraction} technique \cite{emerson1999asymmetry}. By this technique, the global state is defined by a vector of counters, one for each local state of nodes. If there are $n$ nodes in a network where each node can have $m$ possible local states, the global state is shown as $\langle c_1,\ldots,c_m \rangle $, where $c_i\le n$ denotes the number of nodes residing in the local state $i\le m$. Therefore, the state space is reduced from $m^n$ to $\begin{pmatrix}
+The reduction technique can be improved further if the topology be stable. As rebecs have no shared variable, the state space %of a network, consisted of homogeneous nodes, 
+can be reduced by the \emph{counter abstraction} technique \cite{emerson1999asymmetry}. By this technique, the global state is defined by a vector of counters, one for each local state of nodes. If there are $n$ nodes in a network where each node can have $m$ possible local states, the global state is shown as $\langle c_1,\ldots,c_m \rangle $, where $c_i\le n$ denotes the number of nodes residing in the local state $i\le m$. Therefore, the state space is reduced from $m^n$ to $\begin{pmatrix}
 n+m-1 \\
 m \\
 \end{pmatrix}$. To apply
 counter abstraction concerning the topology, rebecs with an identical local state and
-neighbors that are \textit{topologically equivalent} are counted together. Intuitively, all topologically equivalent nodes should be either all connected to each other, or disconnected, while they should have the same neighbors (except themselves). So if either one broadcasts, the same set of nodes (except themselves) will receive, and if they are also connected to each other, their counterpart (that is symmetric to the sender) will receive. For example, nodes $1,3$ and $2,4$ are topologically equivalent in Figure \ref{fig:topequiv}. To compute the reduced state space, nodes of the underlying topology are partitioned into the maximal sets of topologically equivalent nodes, and then a counter is considered for each pair of topology equivalence class and a local state that a rebec can be reside in. %, denoted by $\mathcal{N}_1,\ldots,\mathcal{N}_\ell$. We define the set of \textit{distinct local states} as $S^d=\bigcup_{c\in C}S_c$, and the set of topology equivalence classes as $\mathbb{T}=\{\mathcal{N}_1,\ldots,\mathcal{N}_\ell\} $.
-% Consequently, each global state $( s_1,\ldots,s_n,\gamma)$ is
-%abstracted into a vector of elements $(s^d_i,\mathcal{N}_i):c_i$ where $s^d_i\in S^d$, $\mathcal{N}_i\in\mathbb{T}$, and $c_i$ is the number of nodes in the topology equivalence class $\mathcal{N}_i$ that reside in the very local state $s^d_i$. Counting abstraction is beneficial when the reactive classes do not have a variable that will be assigned uniquely to its instances, such as  ``unique address" as a state variable. (Note that at the semantics, rebecs have identifiers which are not a part of their local states.)
+neighbors, called \textit{topologically equivalent},  are counted together. Intuitively, all topologically equivalent nodes should be either all connected to each other, or disconnected, while they should have the same neighbors (except themselves). So if either one broadcasts, the same set of nodes (except themselves) will receive, and if they are also connected to each other, their counterpart (that is symmetric to the sender) will receive. For example, the nodes $1,3$ and $2,4$ are topologically equivalent in Figure \ref{fig:topequiv}. To compute the reduced state space, nodes of the underlying topology are partitioned into the maximal sets of topologically equivalent nodes, and then a counter is considered for each pair of topology equivalence class and a local state that a rebec can reside in. For instance, assume a network with four rebecs of a same class where $i$ and ${\it msg}$ are its state variable and message server name, respectively. When the underlying topology is the one shown in Figure \ref{fig:topequiv}, as rebecs $1$ and $3$ have the same local state (expressed by a pair of the state variable valuation and message queue) as shown in Figure \ref{fig::reduction}, and they are topologically equivalent, the global state can be represented as shown in this figure. As a consequence, the resulting state merges two states into one: one as shown in the figure, and the other in which the local states of nodes $2$ and $4$ swap. We proved that the reduced transition system is strongly bisimilar to
+the original one, and the state space reduction is considerable for models with homogeneous  actors that are no more distinguished by their identifiers. This technique is
+beneficial for finding an error during the design of a new version of a protocol.
+If we know that a certain topology leads to malfunctioning of a previous version of the protocol, we can check the new version of the protocol using that certain topology.
 
  \begin{figure*}
  	\centering
@@ -77,7 +142,7 @@ neighbors that are \textit{topologically equivalent} are counted together. Intui
  		\draw (n3) edge (n2);
  		\draw (n3) edge (n4);
  		\end{tikzpicture}
- 		\caption{A topology}
+ 		\caption{A topology: the links among the nodes are bidirectional}
  		\label{fig:topequiv}
  	\end{subfigure}
     \begin{subfigure}[b]{0.6\textwidth}
@@ -100,15 +165,15 @@ neighbors that are \textit{topologically equivalent} are counted together. Intui
 %    \begin{subfigure}[b]{0.3\textwidth}
 %    	\begin{tikzpicture}[scale=.8, transform shape]
     	\node [draw,outer sep=0,inner sep=3,minimum size=10] (n2) at (7,11)
-    	{$\begin{array}{l} ((\{i\mapsto 1\},\epsilon),\{1,3\}):\{1,3\},
-    		\\((\{i\mapsto 2\},\langle{\it msg}\rangle),\{2,4\}):\{2\},\\
-    		((\{i\mapsto 0\},\epsilon),\{2,4\}):\{4\}\end{array} $};
+    	{$\begin{array}{l} ((\{i\mapsto 1\},\epsilon),\{1,3\}):2,
+    		\\((\{i\mapsto 2\},\langle{\it msg}\rangle),\{2,4\}):1,\\
+    		((\{i\mapsto 0\},\epsilon),\{2,4\}):1\end{array} $};
     	\draw[->, style=dashed] (n1) edge node[above]{reduced} (n2);
     	\end{tikzpicture}
     	\caption{Counter abstraction reduction}
     	\label{fig::reduction}
     \end{subfigure}    	
-   \caption{Applying counter abstraction reduction with the assumed topology}
+   \caption{Applying counter abstraction reduction to a network with four nodes and the assumed topology, each having a local variable $i$ }
    \label{fig:counter-abstraction}
 \end{figure*}
 
