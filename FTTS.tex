@@ -1,1 +1,12 @@
 \section{Floating Time Transition System} \label{sec::FTTS}
+Active objects and actors are encapsulated modules with no shared variables. We also choose to have atomic execution of message servers (i.e. methods, event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
+Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a future  construct in the language.
+This isolation helps in more efficient analysis, and reduces the state space.
+Moreover, if we are only interested in event-based properties we may be able to abstract even more and just keep the states that are followed by an event which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events.
+
+Floating Time Transition System is proposed based on the above discussion. What we mean by floating time is that in the state space the actors are not necessary synchronised by their local clocks. We consider this as letting the time float across the actors in the state space. 
+Note that in Timed Rebeca actors have synchronsed local clocks which gives us a notion of global time. We rely on layered levels of abstraction for that. For distributed actors to be able to have synchronised time stamps we rely on the lower-level network protocols.
+To avoid confusion, noting the different layers of modeling is important here. We have distributed systems, we use Timed Rebeca to model distributed systems, and we model the state space as Floating Time Transition System to do the analysis. 
+
+
+
