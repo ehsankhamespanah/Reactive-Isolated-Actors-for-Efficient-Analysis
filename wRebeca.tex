@@ -1,12 +1,11 @@
 \section{Verification of Mobile Ad-hoc Protocols}\label{sec::wrebeca} 
-Mobile Ad-hoc wireless networks (MANETs) consist of mobile nodes equipped by wireless transceivers by which they communicate. These networks are applicable where no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks are available, as their nodes operate in a completely collaborative and distributed manner. A node $A$ can receive data from a node $B$ if $A$ is located in the communication range of $B$, i.e., $A$ is directly connected to $B$. The union of (dis)connectivity relations among the node forms the underlying topology.  Due to the mobility of node, (dis)connectivity relations among nodes change, and the topology is dynamic. As all nodes are not directly connected, they rely on each other to communicate indirectly with those not within their range. To this aim, they collaborate on ad-hoc to find a valid route to a destination. A route is valid if the corresponding path exists in the topology. Routes are partially maintained in the routing tables of nodes by indicating the next-hop(s) to their intended destination. As topology changes, the routes maintained by nodes should be updated to prevent from useless communications leading to the energy consumption and network degradation. During the process of route maintenance, it is possible that by following next-hops, a route visits the same node more than once, and a loop is formed. To avoid cycling data in a MANET, \emph{loop-freedom} is one of the main properties of routing protocols MANET routing. Due to enormous number of topology changes, finding a mobility scenario leading to protocol malfunction, e.g., formation of a loop for routing protocols,  %checking non-existence of loops 
-is not possible by simulation-based approaches, and so their design is error-prone in practice.   %designing MANET protocols is not easy in practice and  can be found by simulation-based approaches.  
+Mobile Ad-hoc wireless networks (MANETs) consist of mobile nodes equipped by wireless transceivers by which they communicate. These networks are applicable where no pre-existing infrastructure, such as routers in wired networks or access points in managed (infrastructure) wireless networks are available, as their nodes operate in a completely collaborative and distributed manner. A node $A$ can receive data from a node $B$ if $A$ is located in the communication range of $B$, i.e., $A$ is directly connected to $B$. The union of (dis)connectivity relations among the node forms the underlying topology.  Due to the mobility of node, (dis)connectivity relations among nodes change, and the topology is dynamic. As all nodes are not directly connected, they rely on each other to communicate indirectly with those not within their range. To this aim, they collaborate ad-hocly to find a valid route to a destination. A route is valid if the corresponding path exists in the topology. Routes are partially maintained in the routing tables of nodes by indicating the next-hop(s) to their intended destination. As topology changes, the routes maintained by nodes should be updated to prevent from useless communications leading to the energy consumption and network degradation. During the process of route maintenance, it is possible that by following next-hops, a route visits the same node more than once, and a loop is formed. To avoid data spinning over a MANET, \emph{loop-freedom} is one of the main properties of routing protocols MANET routing. Due to the enormous number of topology changes, finding a mobility scenario leading to protocol malfunction, e.g., the formation of a loop for routing protocols, is not possible by simulation-based approaches, and so designing such protocols are not easy in practice. %without using rigorous analysis tools.   %designing MANET protocols is not easy in practice and  can be found by simulation-based approaches.  
 
 %As wireless communication depends on the locality of nodes, i.e., the underlying topology, the behavior of nodes depends on the topology. Therefore, the correctness properties of MANETs are topology-dependent and hence, weaker in comparison with wired networks. For instance, one of the main properties of routing protocols is \emph{loop-freedom}, i.e., no established route stored in the routing tables visits the same node more than once. 
 %\fixme{why "However"?}
 %However, in MANETs, this property should hold for any mobility scenario. Another property for routing protocols is \emph{packet delivery}: always packets can be sent from a source to a connected destination. For MANETs, the packet delivery property is considered as whenever there is a path from a source to a destination for enough long period, any packet sent from a source can be received by the destination \cite{GlabbeekAWN}.
 
-Rebeca was extended in \cite{FOAC}, called wRebeca, to model and verify %the topology-dependent properties of 
+Rebeca is extended in \cite{FOAC}, called wRebeca, to model and verify %the topology-dependent properties of 
 MANET protocols addressing dynamically changing topology. To support modeling such protocols, wRebeca provides unicast, multicast, and broadcast for communication. The wRebeca model of an abstract version of Ad-hoc On Demand Vector (AODV) routing protocol \cite{AODV} is given in Figure \ref{code:aodv}. Each node in the network is modeled as an actor, and the routing protocol
 is represented through the message servers of the actor. The network topology and its mobility are captured while analyzing the model, and are not explicitly modeled in the wRebeca code.  
 %
@@ -30,8 +29,11 @@ delivery can fail ($\it unsucc$ in line $31$) if the receiver node is not in the
 
 To reason about small-sized networks by model checking technique, the transition system of a model is generated. The global states %of a semantic model
 are defined by the local state of rebecs and the underlying topology. %As mobility is the intrinsic characteristic of nodes, the dynamism of the topology is not explicitly defined as part of the protocol specification. 
-To capture topology changes, for each global state, there are a set of state transitions by which the underlying topology is randomly changed.  For a network of $n$ nodes, there are $(n^2-n)$ possible links among them, %and by assuming the links are symmetrical, 
-so the state pace grows with a factor of $2^{(n^2-n)}$. 
+To capture topology changes, for each global state, a set of state transitions are generated by which the underlying topology is randomly changed.  For a network of $n$ nodes, there are $2\times \begin{pmatrix}
+n \\
+2 \\
+\end{pmatrix}$ possible uni-directional links among them, and as each link can be up/down $2^{(n^2-n)}$ possible topologies, %and by assuming the links are symmetrical, 
+so the state pace grows with a factor of $2^{(n^2-n)}$ in comparison with the classic Rebeca. 
 
 To tackle the state space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. To capture the effect of topology, the (dis)connectivity of those links that result the same behaviors are added to the labels on the transitions. A set of (dis-)connectivity relations among two actors, expressing the status of their links, is called \emph{network constraint}~\cite{FatemehFI10,FatemehFI19}. For instance, ${\it and}({\it con}(n_1,n_2),!{\it con}(n_3,n_4)$ denotes that the actor  $n_1$ is connected to $n_2$ while $n_3$ is disconnected from $n_4$. The network constraint of each state transition isolates those connected actors and computes the effect of processing of events. %an event while isolating those connected actors. %while it is restricted to the set of topologies for which that behavior is valid. 
 We elaborate the idea with an example. Recall that a destination node, upon receiving a request message, ${\it rec\_rreq}$, unicasts ${\it rec\_rrep}$ to the next-hop of the request origin $({\it oip\_})$ (line $26$ in Figure \ref{code:aodv}). In the reduced state space,  for the global states in which the destination has a ${\it rec\_rreq}$ message to handle, at least two next states are considered; one for the case that the destination is connected to the next-hop, and one for the case that they are disconnected. In the first case, the destination and next-hop are considered in isolation and the effect of processing a request message is computed by inserting a ${\it rec\_rrep}$ message in the queue of the next-hop. The second case partitions actors in further as the destination should informs its upstream nodes that the next-hop is not reachable through it by broadcasting an error message, ${\it rec\_rerr}$ (this part of code has been abstracted in line $33$). In other words, the effect of processing the request event is computed for those connected subsets of actors excluding the next-hop in isolation. This scenario has been illustrated in Figure \ref{Fig::reduction} in a MANET with four nodes. Assume that $n_1$ and $n_3$ are the source and destination, respectively, and $n_3$ has received its request message from $n_2$. The next-hop for $n_3$ to reach $n_2$ is through $n_4$. The state in which $n_3$ has a request message to handle is determined with a thick border. The next states are classified into two categorizes; those that $n_3$ is connected to $n_4$, denoted by $\{n_3\conn n_4\}$, and those that $n_3$ is disconnected from $n_4$, denoted by $\{n_3\nconn n_4\}$. The second category is partitioned regarding the connectivity of $n_3$ to $n_1$ and $n_2$. When $\{n_3\nconn n_1,n_2,n_4\}$, the next state is computed for $n_3$ in isolation with no neighbour to receive the error message, so none of them are effected. Conversely when $\{n_3\nconn n_4\},\{n_4\conn n_1,n_2\}$, the next state is computed for $n_1,n_2,n_3$ in isolation, so both $n_1$ and $n_2$ get the error message. To enforce a set of stable (dis)connectivity relations among the actors to govern the level of isolation, they can be specified in \emph{constraints} block at line $68$ of Figure \ref{code:aodv}.  
@@ -143,30 +145,19 @@ If we know that a certain topology leads to malfunctioning of a previous version
  		\draw (n3) edge (n4);
  		\end{tikzpicture}
  		\caption{A topology: the links among the nodes are bidirectional}
- 		\label{fig:topequiv}
+ 		\label{fig:topequiv} 	
  	\end{subfigure}
     \begin{subfigure}[b]{0.6\textwidth}
     	\begin{tikzpicture}[scale=.8, transform shape]
     	\node [draw,outer sep=0,inner sep=3,minimum size=10] (n1) at (1,11) {$\begin{array}{l} 
-    		1:(\{i\mapsto 1\},\epsilon),\\ 
-    		2:(\{i\mapsto 2\},\langle{\it msg}\rangle),\\
-    		3:(\{i\mapsto 1\},\epsilon),\\
-    		4:(\{i\mapsto 0\},\epsilon),\end{array} %\begin{pmatrix}
-    		%1 & 1 & 0 & 1 \\
-    		%1& 1& 1 & 0 \\
-    		%0 & 1  & 1 & 1 \\
-    		%1 & 0 & 1 & 1
-    		%\end{pmatrix}
+    		1:(\{i\mapsto 1\},\epsilon)\\ 
+    		2:(\{i\mapsto 2\},\langle{\it msg}\rangle)\\
+    		3:(\{i\mapsto 1\},\epsilon)\\
+    		4:(\{i\mapsto 0\},\epsilon)\end{array} %\begin{pmatrix}
     		$};
-%    	\end{tikzpicture}
-%    	\caption{Before applying counter abstraction}
-%    	\label{fig::global}
-%    \end{subfigure}
-%    \begin{subfigure}[b]{0.3\textwidth}
-%    	\begin{tikzpicture}[scale=.8, transform shape]
     	\node [draw,outer sep=0,inner sep=3,minimum size=10] (n2) at (7,11)
-    	{$\begin{array}{l} ((\{i\mapsto 1\},\epsilon),\{1,3\}):2,
-    		\\((\{i\mapsto 2\},\langle{\it msg}\rangle),\{2,4\}):1,\\
+    	{$\begin{array}{l} ((\{i\mapsto 1\},\epsilon),\{1,3\}):2
+    		\\((\{i\mapsto 2\},\langle{\it msg}\rangle),\{2,4\}):1\\
     		((\{i\mapsto 0\},\epsilon),\{2,4\}):1\end{array} $};
     	\draw[->, style=dashed] (n1) edge node[above]{reduced} (n2);
     	\end{tikzpicture}
