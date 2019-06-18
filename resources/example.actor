@@ -1,0 +1,34 @@
+reactiveclass AC1 {
+  knownrebecs {AC2 ac2;}
+  AC1() {
+    self.msg1();
+  }
+  msgsrv msg1() {
+    self.msg2();
+    ac2.msg3();
+  }
+  msgsrv msg2() {
+    self.msg1();
+    ac2.msg4();
+  }
+}
+reactiveclass AC2 {
+  knownrebecs{AC1 ac1;}
+  statevars{int sv;}
+  AC2() {
+    sv = 1;
+  }
+  msgsrv msg3() {
+    ac1.msg1();
+  }
+  msgsrv msg4() {
+    if (sv == 1)
+      sv = 4;
+    else
+      sv = 3;
+  }
+}
+main {
+    AC1 ac1(ac2):();
+    AC2 ac2(ac1):();
+}

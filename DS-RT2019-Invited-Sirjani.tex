@@ -6,7 +6,7 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{caption}
-%\usepackage{subfigure}
+\usepackage{subfigure}
 \usepackage{subcaption}
 
 \usepackage{textcomp}
@@ -83,7 +83,9 @@
 	\maketitle
 	
 	\begin{abstract}
-		I will introduce timed actors for modeling distributed systems and will explain our theories, techniques and tools for model checking and performance evaluation of such models. Timed Rebeca can be used to model asynchronous event-based components in systems, and real time constraints can be captured in the language. I will explain how floating-time transition system can be used for model checking of such models when we are interested in event-based properties, and how it helps in state space reduction. I will show different applications of our approach including analysing a wireless sensor network application, mobile ad-hoc network protocols, network-on-chip designs, and a macroscopic agent-based simulation of urban planning.
+		In this paper, we will introduce timed reactive actors for modeling distributed systems and will explain our theories, techniques and tools for model checking and performance evaluation of such models.  Rebeca can be used to model asynchronous event-based components in systems, and in the extended version, Timed Rebeca, real time constraints can be captured in the language. We will explain how the isolation of actors, meaning no shared variable, non-preemptive execution of event handlers, and no blocking send or receive, help in developing more efficient analysis techniques. We show how floating-time transition system can be used for model checking of such models when we are interested in event-based properties, and how it helps in state space reduction. We explain how isolation of actors helps in distributed model checking? ... and how it helps in verification of MANETs. The same approach can be used in verification of swarms ...
+		
+		%I will show different applications of our approach including analysing a wireless sensor network application, mobile ad-hoc network protocols, network-on-chip designs, and a macroscopic agent-based simulation of urban planning.
 	\end{abstract}
 	
 	\begin{IEEEkeywords}

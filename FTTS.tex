@@ -1,1 +1,19 @@
 \section{Floating Time Transition System} \label{sec::FTTS}
+Active objects and actors are encapsulated modules with no shared variables. We also choose to have atomic execution of message servers (i.e. methods, event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
+Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a future  construct in the language.
+This isolation helps in more efficient analysis, and reduces the state space.
+Moreover, if we are only interested in event-based properties we may be able to abstract even more and just keep the states that are followed by an event which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events.
+
+Floating Time Transition System is proposed based on the above discussion. What we mean by floating time is that in each state of the state space, different actors do not necessary have the same local clock. Actors are not synchronised on their local time in the state space. We consider this as letting the time \textit{float} across the actors in the state space. 
+To avoid confusion, it is important to note the different models in different levels of abstraction, and also layering of models. We have (1) distributed systems, we use (2) Timed Rebeca to model distributed systems, and we model (3) the state space as Floating Time Transition System to do the analysis. 
+%
+Note that at the level of Timed Rebeca, actors have synchronised local clocks which gives us a notion of global time across the model. We use time stamps, and time stamps are comparable accross all actors in the model. This makes our model simpler and more understandable, and our analysis more efficient.
+But in distributed systems we cannot assume syncronised clocks and time stamps. 
+For that assumption to be a valid and faithful enough to the system,  we rely on layering and different responsibilities for different layers. For distributed actors to be able to have synchronised time stamps we rely on the lower-level network protocols to provide that for us. 
+
+If we use the standard Timed Transition System to generate the state space for Timed Rebeca model we distinguish three types of transitions: time transitions, events, and $\tau$ transitions.
+In FTTS we reduce that to only event transitions.
+
+
+
+
