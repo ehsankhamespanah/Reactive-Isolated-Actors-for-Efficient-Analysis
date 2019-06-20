@@ -12,8 +12,9 @@ But in distributed systems we cannot assume syncronised clocks and time stamps.
 For that assumption to be a valid and faithful enough to the system,  we rely on layering and different responsibilities for different layers. For distributed actors to be able to have synchronised time stamps we rely on the lower-level network protocols to provide that for us. 
 
 In Timed Rebeca we have a concept of time. Each statement is executed at a certain time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among the distributed system. We assume that local clocks of actors are synchronised and we can have comparable time stamps on each statement in the actors.
-We use a \texttt{delay(t)} statement to show that time is passing
 %
+For the semantics of Timed Rebeca models, we use a \texttt{delay(t)} statement to show that time is passing. 
+
 If we use the standard Timed Transition System to generate the state space for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
 In FTTS we reduce that to only \textit{events} transitions.
 %
