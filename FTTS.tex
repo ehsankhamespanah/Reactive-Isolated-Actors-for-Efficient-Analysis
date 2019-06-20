@@ -11,9 +11,15 @@ Note that at the level of Timed Rebeca, actors have synchronised local clocks wh
 But in distributed systems we cannot assume syncronised clocks and time stamps. 
 For that assumption to be a valid and faithful enough to the system,  we rely on layering and different responsibilities for different layers. For distributed actors to be able to have synchronised time stamps we rely on the lower-level network protocols to provide that for us. 
 
-In Timed Rebeca we have a concept of time. Each statement is executed at a certain time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among the distributed system. We assume that local clocks of actors are synchronised and we can have comparable time stamps on each statement in the actors.
+In Timed Rebeca we have a concept of time. Each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system. We assume that local clocks of actors are synchronised and we can have comparable time stamps on each statement in the actors.
 %
-In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computation delay. Other statements are assumed to be executed in zero time. We use  \texttt{after(t)} in combination with a send message statement to show that the 
+In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computation delay. Other statements are assumed to be executed in zero time. We use  \texttt{after(t)} in combination with a send message statement to show that the time stamp of the message when it is put in the queue of the receiver is the value of the local clock of the sender (\texttt{now} in the sender) plus the value of \texttt{t}.
+The progress of time is forced by the \texttt{delay} statement and also by \texttt{after}. 
+We can assume that the time stamp of all the statements are zero when a model starts to execute, then in each actor the local time is increased by value of \texttt{t} if there is a \texttt{delay(t)} statement.
+A \texttt{send} statement with an  \texttt{after} does not cause any increase in the local time per se. The statement following the \texttt{send} statement has the same time stamp as the \texttt{send} statement itself.
+The \texttt{after} construct can cause an increase in the time when the actor picks the message to be executed. The local time of the receiver actor is set to the time stamp of the message, unless it is already greater than that.
+The latter situation means that the message has been sitting in the queue while the actor has been busy executing another message. Remember that messages are executed atomically and are not preempted.
+
 
 If we use the standard Timed Transition System to generate the state space for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
 In FTTS we reduce that to only \textit{events} transitions.
