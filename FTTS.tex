@@ -26,7 +26,38 @@ If we use the standard Timed Transition System to generate the state space for T
 In FTTS we reduce that to only \textit{events} transitions.
 %
 
+\begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
+reactiveclass RC1 (3) {
+	knownrebecs {
+		RC2 r2;
+	}
+	RC1() {
+		self.m1();
+	}
+	msgsrv m1() {
+		delay(2);
+		r2.m2();
+		delay(2);
+		 r2.m3();
+		self.m1() after (10);
+	}
+}
+reactiveclass RC2 (4) {
+	knownrebecs {
+		RC1 r1;
+	}
+	RC2() { }
+	msgsrv m2() { }
+	
+	msgsrv m3() { }
+}
 
+main {
+	RC1 r1(r2):();
+	RC2 r2(r1):();
+}
+
+\end{lstlisting}
 
 
 
