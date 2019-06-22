@@ -4,9 +4,7 @@
 \Ehsan{blue}
 \Fatem{green}
 
-Message of the paper:
-
-The actor-based language, Rebeca, provides a usable and analyzable model for distributed, concurrent, event-based asynchronous systems (Cyber-Physical systems).
+%Message of the paper: The actor-based language, Rebeca, provides a usable and analyzable model for distributed, concurrent, event-based asynchronous systems (Cyber-Physical systems).
 
 Distributed systems  are defined like this
 
@@ -14,9 +12,15 @@ Reactive systems are defined like this
 
 Actor-based languages and distributed systems
 
-Why actors are good models for distributed systems?
+%Why actors are good models for distributed systems?
+\noindent\textbf{Faithful Models for Distributed Reactive Systems} %\label{sec::Faithfulness}
+From Rocco paper: a major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation.
 
-Analysis of Distributed systems and actors
+From Gul and Rajesh: 
+%http://web.cs.ucla.edu/~palsberg/course/cs239/papers/karmani-agha.pdfA 
+programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented. 
+
+\noindent\textbf{Rebeca Modeling Langauge}
 
 Rebeca and theories
 
@@ -24,7 +28,13 @@ Rebeca and Applications
 
 Rebeca and tool support
 
-OLDER TEXT:
+\noindent\textbf{Isolated Actors and Analysis.}
+Analysis of Distributed systems and actors
+
+Active objects and actors are encapsulated modules with no shared variables. We also choose to have atomic execution of message servers (i.e. methods, event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
+Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a future  construct in the language.
+This isolation helps in more efficient analysis, and reduces the state space.
+Moreover, if we are only interested in event-based properties we may be able to abstract even more and just keep the states that are followed by a transition which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events while abstracting away some of the states and transitions. This is what is done in partial order reduction.
 
 Floating Time Transition System is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
 	
