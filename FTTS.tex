@@ -41,11 +41,11 @@ reactiveclass RC1 (3) {
 		self.m1();
 	}
 	msgsrv m1() {
-		delay(2); %PC = 2
-		r2.m2();  %PC = 3 
-		delay(2); %PC = 4 
-		r2.m3();  %PC = 5
-		self.m1() after (10); %PC = 6
+		delay(2); %PC = 1
+		r2.m2();  %PC = 2 
+		delay(2); %PC = 3 
+		r2.m3();  %PC = 4
+		self.m1() after (10); %PC = 5
 	}
 }
 reactiveclass RC2 (4) {
@@ -71,7 +71,7 @@ main {
 \label{fig::TTS}
   \centering
   \small{
-   \includegraphics[width=.18\textwidth]{Picture1-TTS.pdf}
+   \includegraphics[width=.18\textwidth]{TTSCorrect.pdf}
   }
 }
 \qquad
