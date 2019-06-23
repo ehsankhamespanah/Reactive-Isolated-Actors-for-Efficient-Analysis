@@ -17,16 +17,20 @@ We can assume that the time stamp of all the statements are zero when a model st
 A \texttt{send} statement with an  \texttt{after} does not cause any increase in the local time per se. The statement following the \texttt{send} statement has the same time stamp as the \texttt{send} statement itself.
 The \texttt{after} construct may cause an increase in the time when the actor picks the message annotated by \texttt{after} to be executed. The local time of the receiver actor is set to the time stamp of the message, unless it is already greater than that.
 The latter situation means that the message has been sitting in the queue while the actor has been busy executing another message.
-%
-after is pushing time
-%
 Remember that messages are executed atomically and are not preempted.
+%
+The progress of time happens in the case that the time stamp of the message is greater than the local time of the receiver actor, the local time will be pushed forward.
+%
 The \texttt{after} construct can be used to model the network delay, and also to model periodic events.
 
 
-If we use the standard Timed Transition System to generate the state space for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
+If we use the standard Timed Transition System (TTS) to generate the state space for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
 In FTTS we reduce that to only \textit{events} transitions.
 %
+We explain TTS and FTTS for Timed Rebeca using an example in Listing \ref{src::FTTS-actor-model}.
+Listing \ref{src::FTTS-actor-model} shows a simple Rebeca model with two rebecs $r1$ and $r2$ instantiated from two reactive classes $RC1$ and $RC2$.
+$RC1$ has only one message server ($m1$) in which it triggers the two message servers of $RC2$ ($m2$ and $m3$).
+The two message servers of $RC2$ are basically null handlers that do nothing, i.e., there are no internal actions caused by statements like assignments, and no \texttt{send}  or \texttt{delay} statements.
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
@@ -37,11 +41,11 @@ reactiveclass RC1 (3) {
 		self.m1();
 	}
 	msgsrv m1() {
-		delay(2);
-		r2.m2();
-		delay(2);
-		 r2.m3();
-		self.m1() after (10);
+		delay(2); %PC = 2
+		r2.m2();  %PC = 3 
+		delay(2); %PC = 4 
+		r2.m3();  %PC = 5
+		self.m1() after (10); %PC = 6
 	}
 }
 reactiveclass RC2 (4) {
