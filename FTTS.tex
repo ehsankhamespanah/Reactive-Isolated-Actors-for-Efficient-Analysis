@@ -30,7 +30,10 @@ In FTTS we reduce that to only \textit{events} transitions.
 We explain TTS and FTTS for Timed Rebeca using an example in Listing \ref{src::FTTS-actor-model}.
 Listing \ref{src::FTTS-actor-model} shows a simple Rebeca model with two rebecs $r1$ and $r2$ instantiated from two reactive classes $RC1$ and $RC2$.
 $RC1$ has only one message server ($m1$) in which it triggers the two message servers of $RC2$ ($m2$ and $m3$).
-The two message servers of $RC2$ are basically null handlers that do nothing, i.e., there are no internal actions caused by statements like assignments, and no \texttt{send}  or \texttt{delay} statements.
+The two message servers of $RC2$ are event handlers that do nothing, i.e., there are no internal actions caused by statements like assignments, or \texttt{send}, and no  \texttt{delay} statements. Note that \texttt{send} statements are considered as internal or silent actions but they cause a change in the message queue of the receiver by adding the sent message to that queue.
+The constructor of $RC1$ puts the message $m1$ in the queue of $RC1$. 
+
+Figure \ref{fig::FTTSandTTS}.a shows the TTS generated for the model in Listing \ref{src::FTTS-actor-model}. In $time=0$ we have the message $m1$ in the queus of $r1$.
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
@@ -89,5 +92,5 @@ main {
 \begin{figure}
 \includegraphics[width=.35\textwidth]{Picture3-BFTTS.pdf}
 \caption{ Bounded FTTS for the Timed Rebeca model in Listing \ref{src::FTTS-actor-model}.}
-\label{fig::clinger-cdg}
+\label{fig::FTTSandTTS}
 \end{figure}
