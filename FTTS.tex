@@ -7,7 +7,7 @@ To avoid confusion, it is important to note the different models in different le
 %
 Note that at the level of Timed Rebeca, actors have synchronised local clocks which gives us a notion of global time across the model. We use time stamps, and time stamps are comparable across all actors in the model. This makes our model simpler and more understandable, and our analysis more efficient.
 But in distributed systems we cannot assume synchronised clocks and time stamps. 
-For that assumption to be valid and faithful enough to the system,  we rely on layering and different responsibilities for different layers. For distributed actors to be able to have synchronised clocks and comparable time stamps we rely on the lower-level network protocols to provide that for us. 
+For that assumption to be valid and faithful enough to the system,  we rely on the layering and different responsibilities for different layers. For distributed actors (as faithful representatives of distributed software components) to be able to have synchronised clocks and comparable time stamps we rely on the lower-level network protocols to provide that for us. 
 
 In Timed Rebeca we have a concept of time and we can consider that each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system. We assume that local clocks of actors are synchronised and we can have comparable time stamps on each statement in the actors.
 %
@@ -15,8 +15,12 @@ In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computa
 The progress of time is forced by the \texttt{delay} statement and also by \texttt{after}. 
 We can assume that the time stamp of all the statements are zero when a model starts to execute, then in each actor the local time is increased by value of \texttt{t} if there is a \texttt{delay(t)} statement.
 A \texttt{send} statement with an  \texttt{after} does not cause any increase in the local time per se. The statement following the \texttt{send} statement has the same time stamp as the \texttt{send} statement itself.
-The \texttt{after} construct can cause an increase in the time when the actor picks the message annotated by \texttt{after} to be executed. The local time of the receiver actor is set to the time stamp of the message, unless it is already greater than that.
-The latter situation means that the message has been sitting in the queue while the actor has been busy executing another message. Remember that messages are executed atomically and are not preempted.
+The \texttt{after} construct may cause an increase in the time when the actor picks the message annotated by \texttt{after} to be executed. The local time of the receiver actor is set to the time stamp of the message, unless it is already greater than that.
+The latter situation means that the message has been sitting in the queue while the actor has been busy executing another message.
+%
+after is pushing time
+%
+Remember that messages are executed atomically and are not preempted.
 The \texttt{after} construct can be used to model the network delay, and also to model periodic events.
 
 
