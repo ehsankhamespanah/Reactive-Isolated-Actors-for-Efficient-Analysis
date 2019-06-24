@@ -70,21 +70,29 @@ main {
 
 \begin{figure}
 \centering
-\subfigure[TTS]{
-\label{fig::TTS}
+\begin{subfigure}[b]{0.2\textwidth}
+%\subfigure[TTS]{
+%\label{fig::TTS}
   \centering
   \small{
-   \includegraphics[width=.18\textwidth]{TTSCorrect.pdf}
+   \includegraphics[width=.8\textwidth]{TTSCorrect.pdf}
   }
-}
-\qquad
-\subfigure[FTTS]{
-\label{fig::FTTS}
+  \caption{TTS}
+  \label{fig::TTS}
+%}
+\end{subfigure}
+%\qquad
+\begin{subfigure}[b]{0.2\textwidth}
+%\subfigure[FTTS]{
+%\label{fig::FTTS}
   \centering
   \small{
-   \includegraphics[width=.18\textwidth]{Picture2-FTTS.pdf}
+   \includegraphics[width=.8\textwidth]{Picture2-FTTS.pdf}
+   \caption{FTTS}
+   \label{fig::FTTS}
   }
-}
+%}
+\end{subfigure}
 \caption{ TTS and FTTS for the Timed Rebeca model in Listing \ref{src::FTTS-actor-model}.}
 \label{fig::clinger-cdg}
 \end{figure}

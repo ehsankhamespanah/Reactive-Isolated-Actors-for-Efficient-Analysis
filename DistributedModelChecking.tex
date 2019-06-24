@@ -56,21 +56,27 @@ actor model by analyzing the message passing among actors. Using static analysis
 
 \begin{figure}
 \centering
-\subfigure[Clinger event diagram of the actor model in Listing \ref{src::actor-model}]{
+%\subfigure[Clinger event diagram of the actor model in Listing \ref{src::actor-model}]{
+\begin{subfigure}[b]{0.2\textwidth}
 \label{fig::clinger}
   \centering
   \small{
-   \includegraphics[width=.18\textwidth]{resources/clinger.pdf}
+   \includegraphics[width=.8\textwidth]{resources/clinger.pdf}
   }
-}
+  \caption{Clinger event diagram of the actor model in Listing \ref{src::actor-model}}
+%}
+\end{subfigure}
 \qquad
-\subfigure[CDG of the actor model in Listing 1]{
+\begin{subfigure}[b]{0.2\textwidth}
+%\subfigure[CDG of the actor model in Listing 1]{
 \label{fig::cdg}
   \centering
   \small{
-   \includegraphics[width=.18\textwidth]{resources/cdg.pdf}
+   \includegraphics[width=.8\textwidth]{resources/cdg.pdf}
   }
-}
+  \caption{CDG of the actor model in Listing 1}
+%}
+\end{subfigure}
 \caption{Clinger event diagram versus CDG of the actor model in Listing \ref{src::actor-model}.}
 \label{fig::clinger-cdg}
 \end{figure}

@@ -6,7 +6,7 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{caption}
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage{subcaption}
 
 \usepackage{textcomp}
@@ -24,6 +24,9 @@
 		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \newcommand{\conn}{\!\rightsquigarrow\!}
 \newcommand{\nconn}{\!\mathrel{\hspace{.1em}\not\hspace{-.1em}\rightsquigarrow}\!}
+\newcommand{\overto}[1]{\stackrel{#1}{%
+		\overrightarrow{\smash{\,{\phantom{#1}}\,}}}}
+
 %-------------------------
 \lstdefinelanguage{rebeca}{
 	morekeywords={reactiveclass, knownrebecs, statevars, main, msgsrv, constraints,con, main, define, LTL, CTL, boolean, int, shortint, byte, if, else, while, for, wait, msg, reset, set, self, false, true, now, after, delay, deadline, initial, unicast, succ, unsucc},
