@@ -31,9 +31,12 @@ We explain TTS and FTTS for Timed Rebeca using an example in Listing \ref{src::F
 Listing \ref{src::FTTS-actor-model} shows a simple Rebeca model with two rebecs $r1$ and $r2$ instantiated from two reactive classes $RC1$ and $RC2$.
 $RC1$ has only one message server ($m1$) in which it triggers the two message servers of $RC2$ ($m2$ and $m3$).
 The two message servers of $RC2$ are event handlers that do nothing, i.e., there are no internal actions caused by statements like assignments, or \texttt{send}, and no  \texttt{delay} statements. Note that \texttt{send} statements are considered as internal or silent actions but they cause a change in the message queue of the receiver by adding the sent message to that queue.
-The constructor of $RC1$ puts the message $m1$ in the queue of $RC1$. 
+ 
 
-Figure \ref{fig::FTTSandTTS}.a shows the TTS generated for the model in Listing \ref{src::FTTS-actor-model}. In $time=0$ we have the message $m1$ in the queus of $r1$.
+Figure \ref{fig::FTTSandTTS}.a shows the TTS generated for the model in Listing \ref{src::FTTS-actor-model}. 
+The constructor of $RC1$ puts the message $m1$ in the queue of $RC1$. So, in $time=0$ we have the message $m1$ in the queue of $r1$ (see state $s_0$ in Figure \ref{fig::FTTSandTTS}.a). Also, you see that the message queue of $r2$ is empty. On the transition from $s_0$ to $s–1$ the message is taken from the queue of $r–1$, and in the state $s_1$ the method $m_1$ is ready to be executed, i.e., the Program Counter (PC) is at $m1:1$. The first statement in $m_1$ is a \texttt{delay} statement which is executed and pushes the time forward to $time=2$ in state $s_2$.
+In the state $s_2$, the PC points at a $send$ statement: $r_2.m_2()$. After this statement is executed as a silent or $\tau$ statement, we have the message $(r_1 \rightarrow r_2.m_2(), 0, \infty)$ in the queue of $r–2$
+
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
