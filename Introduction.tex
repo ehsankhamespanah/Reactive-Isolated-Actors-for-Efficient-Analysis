@@ -6,34 +6,35 @@
 
 %Message of the paper: The actor-based language, Rebeca, provides a usable and analyzable model for distributed, concurrent, event-based asynchronous systems (Cyber-Physical systems).
 
-Distributed systems  are defined like this
+%Distributed systems  are defined like this
+%IBM: A distributed computer system consists of multiple software components that are on multiple computers, but run as a single system. The computers that are in a distributed system can be physically close together and connected by a local network, or they can be geographically distant and connected by a wide area network. ...distributed system contains multiple nodes that are physically separate but linked together using the network. All the nodes in this system communicate with each other and handle processes in tandem. Each of these nodes contains a small part of the distributed operating system software.
 
-Reactive systems are defined like this
+Distributed systems consist of software components executed on different computers that are linked together by a network. The software components communicate with each other in order to achieve the goal of the distributed system.
+Nowadays distributed systems are everywhere providing scalability and redundancy.  Design and analysis of such systems is overly challenging.
 
-Actor-based languages and distributed systems
+%Reactive systems are defined like this
+%Actor-based languages and distributed systems
+Actor model is a model of concurrent computation for developing parallel, distributed and mobile systems. Each actor is an autonomous object that operates concurrently, and  send and receive messages asynchronously.
+
+Rebeca is an actor-based language proposed to bridge the gap between software engineers and formal methods community.
+Rebeca comes with a formal semantics and is the first actor-based language with model checking support.
 
 %Why actors are good models for distributed systems?
-\noindent\textbf{Faithful models for distributed reactive systems} %\label{sec::Faithfulness}
-How models shape the thought and ease the analysis
+%\noindent\textbf{Faithful models for distributed reactive systems} %\label{sec::Faithfulness}
+%How models shape the thought and ease the analysis
 
-From Rocco paper: a major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation.
-
-From Gul and Rajesh: 
+%From Rocco paper: 
+A major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation \cite{Rocco}.
+%
+%From Gul and Rajesh: 
 %http://web.cs.ucla.edu/~palsberg/course/cs239/papers/karmani-agha.pdfA 
-programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented. 
+A programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented \cite{GulKamrani}. 
 
+
+\noindent\textbf{Analysis of distributed systems and isolated actors.}
 We distinguish three levels of abstraction here: the distributed software system itself with all the implementation details, the modeling language which is Rebeca here, and the generated state space which is built for the sake of analysis and  we model as a state transition system. There are alternative ways for analysis, like using logical theorems and applying reasoning based on that, but here we use different variations of state transition systems.
 We sometimes call the transition system the semantics of our model as it shows the behavior in a formal way.
 
-\noindent\textbf{Rebeca modeling langauge}
-
-Rebeca and theories
-
-Rebeca and Applications
-
-Rebeca and tool support
-
-\noindent\textbf{Analysis of distributed systems and isolated actors.}
 
 Active objects and actors are encapsulated modules with no shared variables. In Rebeca, we also choose to have atomic execution of message servers (i.e. methods, event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
 Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a \textit{future}  construct in the language.
