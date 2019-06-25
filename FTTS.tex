@@ -17,8 +17,8 @@ Note that at the level of Timed Rebeca, actors have synchronised local clocks wh
 But in distributed systems we cannot assume synchronised clocks and time stamps for distributed software components. 
 For that assumption to be valid and faithful enough to the system,  we rely on the layering and different responsibilities for different layers. For distributed actors (as faithful representatives of distributed software components) to be able to have synchronised clocks and comparable time stamps we rely on the lower-level network protocols to provide that for us. 
 
-In Timed Rebeca we have a concept of time and we can consider that each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system. We assume that local clocks of actors are synchronised and we can have comparable time stamps on each statement in the actors.
-%
+In Timed Rebeca we have a concept of time and we can consider that each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system. We assume that local clocks of actors are synchronised and we  have time stamps on each statement  in the actors which are comparable across the actors.
+
 In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computation delay. Other statements are assumed to be executed in zero time. We use  \texttt{after(t)} in combination with a \texttt{send} message statement, it means that the time stamp of the message when it is put in the queue of the receiver is the value of the local clock of the sender (\texttt{now} in the sender) plus the value of \texttt{t}.
 The progress of time is forced by the \texttt{delay} statement and also by \texttt{after}. 
 We can assume that the time stamp of all the statements are zero when a model starts to execute, then in each actor the local time is increased by value of \texttt{t} if there is a \texttt{delay(t)} statement.
@@ -43,9 +43,22 @@ The two message servers of $RC2$ are event handlers that do nothing, i.e., there
 
 Figure \ref{fig::FTTSandTTS}.a shows the TTS generated for the model in Listing \ref{src::FTTS-actor-model}. 
 The constructor of $RC1$ puts the message $m1$ in the queue of $RC1$. So, in $time=0$ we have the message $m1$ in the queue of $r1$ (see state $s_0$ in Figure \ref{fig::FTTSandTTS}.a). Also, you see that the message queue of $r2$ is empty. On the transition from $s_0$ to $s–1$ the message is taken from the queue of $r–1$, and in the state $s_1$ the method $m_1$ is ready to be executed, i.e., the Program Counter (PC) is at $m1:1$. The first statement in $m_1$ is a \texttt{delay} statement which is executed and pushes the time forward to $time=2$ in state $s_2$.
-In the state $s_2$, the PC points at a $send$ statement: $r_2.m_2()$. After this statement is executed as a silent or $\tau$ statement, we move to the state $s_3$ and have the message $m_2$ in the queue of $r–2$. The message $m_2$ is shown as $(r_1 \rightarrow r_2.m_2(), 0, \infty)$ in which zero is the value of \texttt{after} and $\infty$ is the value of \texttt{deadline}.
-On the transition from $s–3$ to $s_4$ the message $m–2$ is fetched to be executed, but the body of the message server $m–2$ is empty so nothing happens. We move from $s_4$ to $s_5$ by executing another \texttt{delay} statement and the time is progressed to four.
-The rest is executed in the same manner, and we will get to state $s–7$.
+In the state $s_2$, the PC points at a $send$ statement: $r_2.m_2()$. After this statement is executed as a silent or $\tau$ statement, we move to the state $s_3$ and have the message $m_2$ in the queue of $r–2$. The message $m_2$ is shown as $(m_2(), 2, \infty)$ in which $2$ is the timestamp of the message and $\infty$ is the value of \texttt{deadline}. The message can only be taken if and when the current time of receiver is greater than or equal its timestamp. If the current time of receiver is less than the timestamp and there is no transition of types  $\tau$  or \textit{event} enabled then the time of the receiver is advanced to the value of the timestamp (transition of type \textit{time}) and only then the message can be taken.
+
+
+On the transition from $s_3$ to $s_4$ the message $m_2$ is fetched to be executed, but the body of the message server $m_2$ is empty so nothing happens. We move from $s_4$ to $s_5$ by executing another \texttt{delay} statement and the time is progressed to four.
+At state $s_5$ the \texttt{send} statement is executed, the message is put in the queue of $r_2$ and we will get to the state $s_6$.
+At state $s_6$, two transitions are enabled and each can be  executed first non-deterministically. 
+We go to the state $s_7$ if the message in the queue of $r_2$ is taken and executed first. We go to the state $s_8$ if the \texttt{send} statement at $m_1:5$  is executed first and then the message $m_1$ is put in the queue of $r_1$. No matter which trace in the diamond shown in the Figure \ref{fig::FTTSandTTS}.a is taken, we will get to the state $s_9$.
+In the state $s_8$, although there is one message in the queue of each rebec, only one transition is enabled. The reason is that   the message in the queue of $r_1$ has the timestamp of $14$ (because of the \texttt{after(10)} attached to the \texttt{send} statement).
+Only in the state $s_9$, when there are no transitions of types $\tau$ or \textit{event}  enabled the transition of type \textit{time} is taken, and time is advanced for $10$ units of time. Now, at the state $s_10$ finally the message $(m_1(), 14,\infty )$ is enabled.
+
+The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FTTSandTTS}.b. From this figure you observe that the only transitions in FTTS are the transitions of type \textit{event}, and you may also notice the reduction.
+%
+The relation between TTS and FTTS of a Timed Rebeca model is not trivial and cannot be explained as partial order reduction, i.e., you may find states in FTTS which are not in TTS.
+For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS there are no similar states in TTS. Nevertheless, in \cite{FACSFTTS} we proved a bisimulation relation between FTTS and TTS to prove that order of events is preserved in FTTS.
+
+To understand the FTTS semantics of Timed Rebeca we should not start from an standard TTS semantics. We have to start from the Timed Rebeca model, and think of an event-based semantics. By focusing on the event-based properties as the properties of interest, we narrow down the interesting transitions to the \textit{event} transitions which are taking the messages from the queue and executing the corresponding message server.
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
