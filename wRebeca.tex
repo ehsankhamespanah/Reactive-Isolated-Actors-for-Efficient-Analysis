@@ -34,7 +34,7 @@ For a network of $n$ nodes, there are $2\times \begin{pmatrix}
 n \\
 2 \\
 \end{pmatrix}$ possible uni-directional links among them, and as each link can be up/down, there are $2^{(n^2-n)}$ possible topologies. %and by assuming the links are symmetrical, 
-So, for each global state, $2^{(n^2-n)}$ transitions are generated to randomly change the topology, and the state pace grows exponentially. % in comparison with the classic Rebeca. 
+So, for each global state, $2^{(n^2-n)}$ transitions are generated to randomly change the topology, and the state space grows exponentially. % in comparison with the classic Rebeca. 
 
 \begin{figure}[h]
 	\begin{subfigure}[b]{0.32\textwidth}
@@ -49,10 +49,25 @@ So, for each global state, $2^{(n^2-n)}$ transitions are generated to randomly c
 	}\label{Fig::reductionidea}	
 \end{figure}
 
-To tackle the state-space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. As a consequence, transitions modifying the topology are removed (as they become self-loop $\tau$-transitions). So states $(S,\gamma_1)$, $(S,\gamma_2)$, and $(S,\gamma_3)$, where $S$ and $\gamma_i$ denote the local states of rebecs and topology respectively, are aggregated as demonstrated in Figure \ref{Fig::stafter}. %A transition is defined from $S$ to $S_1$ if there exists $\gamma_1$ such that $(S,\gamma_1)\overto (S_1,\gamma_1)$. 
-To capture the effect of topology on the state transitions of the reduced model, the (dis)connectivity of those links that results the same modification on the local states of actors %in the original model 
-are added to the labels on the transitions. For example, $S\overto{\alpha} S_1$ is possible in Figure \ref{Fig::stafter} when the underlying topology is either $\gamma_1$ or $\gamma_2$. The links common in both $\gamma_{1}$ and $\gamma_{2}$ that result in the same local state modification, i.e., $S_1$ in Figure \ref{Fig::stbefore}, are added to the label of the transition in Figure \ref{Fig::stbefore}. It should be noted that due to non-determinism in the wRebeca model, $(S,\gamma_1)\overto{\alpha}(S_3,\gamma_1)$, leading to a non-determinism in the reduced model. A set of (dis-)connectivity relations among two actors, expressing the status of their links, is called \emph{network constraint}~\cite{FatemehFI10,FatemehFI19}. For instance, ${\it and}({\it con}(n_1,n_2),!{\it con}(n_3,n_4)$ denotes that the actor  $n_1$ is connected to $n_2$ while $n_3$ is disconnected from $n_4$. The network constraints on transitions express the conditions that the combined states have symmetric behaviors. Our reduction technique is indeed a form of symmetric reduction technique \cite{clarke1998symmetry}. This form of reduction can be applied if the actors were not isolated. %; it is independent from the  
-However, the isolation of actors makes this reduction more effective for the analysis of real-world protocols like AODV.  
+To tackle the state-space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. As a consequence, transitions modifying the topology are removed (as they become self-loop $\tau$-transitions). So states $(S,\gamma_1)$, $(S,\gamma_2)$, and $(S,\gamma_3)$, 
+\fixme{when you only have two things it is better not to use "respectively" it will make the reader to think ... Also I hate the roman and lattin letters, again, I have to think to remember their names, try to use English letters where possible, I mean instead of alpha and gamma and ....}
+\Marjan{where $S$ denotes the local states of rebecs and $\gamma_i$ denotes the  topology}
+\fixme{where $S$ and $\gamma_i$ denote the local states of rebecs and topology respectively}, are aggregated as demonstrated in Figure \ref{Fig::stafter}. %A transition is defined from $S$ to $S_1$ if there exists $\gamma_1$ such that $(S,\gamma_1)\overto (S_1,\gamma_1)$. 
+To capture the effect of the topology on the state transitions of the reduced model, the (dis)connectivity of those links
+\fixme{what do you mean by links resulting the same modification on the local states of actors? }
+\fixme{I think it is better to have $S_0$ instead of S.}
+
+that results the same modification on the local states of actors %in the original model 
+are added to the labels on the transitions. For example, $S\overto{\alpha} S_1$ is possible in Figure \ref{Fig::stafter} when the underlying topology is either $\gamma_1$ or $\gamma_2$. The links common in both $\gamma_{1}$ and $\gamma_{2}$ that result in the same local state modification, i.e., $S_1$ in Figure \ref{Fig::stbefore}, are added to the label of the transition in Figure \ref{Fig::stbefore}. 
+%
+It should be noted that due to non-determinism in the wRebeca model, $(S,\gamma_1)\overto{\alpha}(S_3,\gamma_1)$, leading to a non-determinism in the reduced model. 
+\fixme{What do you mean "due to" ...????}
+A set of (dis-)connectivity relations among two actors, expressing the status of their links, is called \emph{network constraint}~\cite{FatemehFI10,FatemehFI19}. 
+\fixme{Using (dis-)connectivity is very confusing, why not just saying connectivity? or connectivity/disconnectivity}
+
+For instance, ${\it and}({\it con}(n_1,n_2),!{\it con}(n_3,n_4)$ denotes that the actor  $n_1$ is connected to $n_2$ while $n_3$ is disconnected from $n_4$. The network constraints on transitions express the conditions that the combined states have symmetric behaviors. \fixme{I dont understand the previous sentence} Our reduction technique is indeed a form of symmetric reduction technique \cite{clarke1998symmetry}. This form of reduction can be applied if the actors were not isolated. %; it is independent from the  
+However, the isolation of actors makes this reduction more effective for the analysis of real-world protocols like AODV. 
+\fixme{this is a very bad sentence because it doesnt convey any meaning}
 %TODO::why this is possible
 %The network constraint of each state transition isolates those connected actors and computes the effect of processing of events. 
 
