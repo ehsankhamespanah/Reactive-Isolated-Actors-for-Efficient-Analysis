@@ -53,7 +53,7 @@ We go to the state $s_7$ if the message in the queue of $r_2$ is taken and execu
 In the state $s_8$, although there is one message in the queue of each rebec, only one transition is enabled. The reason is that   the message in the queue of $r_1$ has the timestamp of $14$ (because of the \texttt{after(10)} attached to the \texttt{send} statement).
 Only in the state $s_9$, when there are no transitions of types $\tau$ or \textit{event}  enabled the transition of type \textit{time} is taken, and time is advanced for $10$ units of time. Now, at the state $s_10$ finally the message $(m_1(), 14,\infty )$ is enabled.
 
-The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FTTSandTTS}.b. From this figure you observe that the only transitions in FTTS are the transitions of type \textit{event}, and you may also notice the reduction.
+The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FTTSandTTS}.b. From this figure you observe that the only transitions in FTTS are the transitions of type \textit{event}, and you may also notice the reduction in the state space.
 %
 The relation between TTS and FTTS of a Timed Rebeca model is not trivial and cannot be explained as partial order reduction, i.e., you may find states in FTTS which are not in TTS.
 For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS there are no similar states in TTS. Nevertheless, in \cite{FACSFTTS} we proved a bisimulation relation between FTTS and TTS to prove that order of events is preserved in FTTS.
