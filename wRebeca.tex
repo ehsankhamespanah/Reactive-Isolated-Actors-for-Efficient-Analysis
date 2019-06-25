@@ -38,36 +38,75 @@ So, for each global state, $2^{(n^2-n)}$ transitions are generated to randomly c
 
 \begin{figure}[h]
 	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width=\textwidth]{resources/st-before.pdf}
+		%\includegraphics[width=\textwidth]{resources/st-before.pdf}
+		\begin{tikzpicture}[scale=.8, transform shape]		
+		\node[circle,draw] (n1) at (0,0) {\tiny$(S_0,\gamma_1)$};
+		\node[circle,draw] (n2) at (1,-1.5) {\tiny$(S_0,\gamma_2)$};
+		\node[circle,draw] (n3) at (-1,-1.5) {\tiny$(S_0,\gamma_3)$};
+		\node[circle,draw] (n4) at (1.5,1) {\tiny$(S_1,\gamma_1)$};
+		\node[circle,draw] (n5) at (2.5,-0.6) {\tiny$(S_1,\gamma_2)$};
+		\node[circle,draw] (n6) at (-1.5,1) {\tiny$(S_2,\gamma_1)$};
+		\node[circle,draw] (n7) at (-2.5,-0.6) {\tiny$(S_2,\gamma_3)$};
+		%\node[circle,draw] (n8) at (0,1.6) {\tiny$(S_3,\gamma_1)$};
+		\draw[<->]  (n1) edge node[above,sloped]{$\tau$} (n2);
+		\draw[<->]  (n1) edge node[above,sloped]{$\tau$} (n3);
+		\draw[<->]  (n2) edge node[above,sloped]{$\tau$} (n3);
+		\draw[<->]  (n5) edge node[above,sloped]{$\tau$} (n4);
+		\draw[<->]  (n6) edge node[above,sloped]{$\tau$} (n7);
+		%\draw[->]  (n1) edge node[right]{$a$} (n8);
+		\draw[->]  (n1) edge node[above]{$a$} (n4);
+		\draw[->]  (n1) edge node[above]{$a$} (n6);
+		\draw[->]  (n2) edge node[above]{$b$} (n5);
+		\draw[->]  (n3) edge node[above]{$b$} (n7);
+		\end{tikzpicture}
 		\caption{Before reduction}\label{Fig::stbefore}	
 	\end{subfigure}
 	\begin{subfigure}[b]{0.14\textwidth}
-		\includegraphics[width=\textwidth]{resources/st-after.pdf}
+		%\includegraphics[width=\textwidth]{resources/st-after.pdf}
+		\begin{tikzpicture}[scale=.8, transform shape]			
+		\node[circle,draw] (n1) at (0,0) {\tiny$S_0$};
+		\node[circle,draw] (n2) at (1,1) {\tiny$S_1$};
+		\node[circle,draw] (n3) at (1,-1) {\tiny$S_2$};
+		%\node[circle,draw] (n4) at (1.5,0) {\tiny$S_3$};
+		\draw[->]  (n1) edge node[above,sloped]{\scriptsize$a,C_1$} (n2);
+		\draw[->]  (n1) edge node[above,sloped]{\scriptsize $b,C_2$} (n3);
+		%\draw[->]  (n1) edge node[above]{\scriptsize$a,C_3$} (n4);
+		\end{tikzpicture}
 		\caption{After reduction}\label{Fig::stafter}	
 	\end{subfigure}
-	\caption{A simple state space before and after applying the reduction: $\tau$-transitions show the random changes of the topology while $\alpha/\beta-$transitions denote handling of message queues. The network constraint $C_1$ expresses the common links of the topologies $\gamma_{1}$ and $\gamma_2$ while $C_2$ represents the common links of $\gamma_1,\gamma_3$, and $C_3$ represents the links of $\gamma_1$.
+	\caption{A simple state space before and after applying the reduction: $\tau$-transitions show the random changes of the topology while $a/b-$transitions denote handling of message queues. The network constraint $C_1$ expresses the common links of the topologies $\gamma_{1}$ and $\gamma_2$ while $C_2$ represents the common links of $\gamma_1$ and $\gamma_3$. %, and $C_3$ represents the links of $\gamma_1$.
 	}\label{Fig::reductionidea}	
 \end{figure}
 
-To tackle the state-space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. As a consequence, transitions modifying the topology are removed (as they become self-loop $\tau$-transitions). So states $(S,\gamma_1)$, $(S,\gamma_2)$, and $(S,\gamma_3)$, 
-\fixme{when you only have two things it is better not to use "respectively" it will make the reader to think ... Also I hate the roman and lattin letters, again, I have to think to remember their names, try to use English letters where possible, I mean instead of alpha and gamma and ....}
-\Marjan{where $S$ denotes the local states of rebecs and $\gamma_i$ denotes the  topology}
-\fixme{where $S$ and $\gamma_i$ denote the local states of rebecs and topology respectively}, are aggregated as demonstrated in Figure \ref{Fig::stafter}. %A transition is defined from $S$ to $S_1$ if there exists $\gamma_1$ such that $(S,\gamma_1)\overto (S_1,\gamma_1)$. 
-To capture the effect of the topology on the state transitions of the reduced model, the (dis)connectivity of those links
-\fixme{what do you mean by links resulting the same modification on the local states of actors? }
-\fixme{I think it is better to have $S_0$ instead of S.}
-
-that results the same modification on the local states of actors %in the original model 
-are added to the labels on the transitions. For example, $S\overto{\alpha} S_1$ is possible in Figure \ref{Fig::stafter} when the underlying topology is either $\gamma_1$ or $\gamma_2$. The links common in both $\gamma_{1}$ and $\gamma_{2}$ that result in the same local state modification, i.e., $S_1$ in Figure \ref{Fig::stbefore}, are added to the label of the transition in Figure \ref{Fig::stbefore}. 
+To tackle the state-space explosion, we eliminate the topology from the global states and combine those states that are only different in their topologies. As a consequence, transitions modifying the topology are removed (as they become self-loop $\tau$-transitions). So states $(S_0,\gamma_1)$, $(S_0,\gamma_2)$, and $(S_0,\gamma_3)$, 
+%\fixme{when you only have two things it is better not to use "respectively" it will make the reader to think ... Also I hate the roman and lattin letters, again, I have to think to remember their names, try to use English letters where possible, I mean instead of alpha and gamma and ....}
+where $S_0$ denotes the local states of rebecs and $\gamma_i$ denotes the  topology, are aggregated as demonstrated in Figure \ref{Fig::stafter}. %A transition is defined from $S$ to $S_1$ if there exists $\gamma_1$ such that $(S,\gamma_1)\overto (S_1,\gamma_1)$. 
+A state transition like $S_0\overto{a} S_1$ is possible in Figure \ref{Fig::stafter} after the reduction as $(S_0,\gamma_1)\overto{a}(S_1,\gamma_1)$ and $(S_0,\gamma_2)\overto{a}(S_1,\gamma_2)$. In other words, when the local states of rebecs is $S_0$ and the underlying topology is either $\gamma_1$ or $\gamma_2$, handling a same message, represented by $a$, leads to the same next state, i.e., $S_1$.  As message handlers are executed with regard to the topology, the connectivity/disconnectivity of those links that are common in the both topologies make the effect of handling the message be the same. To capture the effect of the topology on the state transitions of the reduced model, the connectivity/disconnectivity of those links
+%\fixme{what do you mean by links resulting the same modification on the local states of actors? }
+that results the same next local state as the consequence of message handling %actors %in the original model 
+are added to the labels on the transitions. For example, %$S\overto{\alpha} S_1$ is possible in Figure \ref{Fig::stafter} when the underlying topology is either $\gamma_1$ or $\gamma_2$. T
+the links common in both $\gamma_{1}$ and $\gamma_{2}$ that result in the same next local state, i.e., $S_1$ in Figure \ref{Fig::stbefore}, are added to the label of the transition in Figure \ref{Fig::stbefore}. 
 %
-It should be noted that due to non-determinism in the wRebeca model, $(S,\gamma_1)\overto{\alpha}(S_3,\gamma_1)$, leading to a non-determinism in the reduced model. 
-\fixme{What do you mean "due to" ...????}
-A set of (dis-)connectivity relations among two actors, expressing the status of their links, is called \emph{network constraint}~\cite{FatemehFI10,FatemehFI19}. 
-\fixme{Using (dis-)connectivity is very confusing, why not just saying connectivity? or connectivity/disconnectivity}
-
-For instance, ${\it and}({\it con}(n_1,n_2),!{\it con}(n_3,n_4)$ denotes that the actor  $n_1$ is connected to $n_2$ while $n_3$ is disconnected from $n_4$. The network constraints on transitions express the conditions that the combined states have symmetric behaviors. \fixme{I dont understand the previous sentence} Our reduction technique is indeed a form of symmetric reduction technique \cite{clarke1998symmetry}. This form of reduction can be applied if the actors were not isolated. %; it is independent from the  
-However, the isolation of actors makes this reduction more effective for the analysis of real-world protocols like AODV. 
-\fixme{this is a very bad sentence because it doesnt convey any meaning}
+%It should be noted that due to non-determinism in the wRebeca model, $(S,\gamma_1)\overto{\alpha}(S_3,\gamma_1)$, leading to a non-determinism in the reduced model. 
+%\fixme{What do you mean "due to" ...????}
+A set of connectivity/disconnectivity relations among two actors, expressing the status of their links, is called \emph{network constraint}~\cite{FatemehFI10,FatemehFI19}. For instance, ${\it and}({\it con}(n_1,n_2),!{\it con}(n_3,n_4)$ denotes that the actor  $n_1$ is connected to $n_2$ while $n_3$ is disconnected from $n_4$. The network constraints on transitions express the conditions on the topology that the combined states have symmetric behaviors. \Fatem{I dont understand the previous sentence, Done!} Our reduction technique is indeed a form of symmetric reduction technique \cite{clarke1998symmetry}. This form of reduction can be applied if the actors were not isolated. %; it is independent from the  
+However, the non-preemptive execution of event handlers makes this reduction more effective for the analysis of real-world protocols like AODV. This reduction technique always reduces the number of states from $m\times 2^{(n^2-n)}$ to $m\times2^{n-1}$, where $m$ is the number of states due to interleaving of event handler's statements. If $m$ be still a large number, the reduction is not effective enough for the state-space generation. Restricting to isolated actors, minimizes $m$ substantially\footnote{Assume there $k$ events for handling that their corresponding event handlers have $i_1$, $\ldots$, and $i_k$ statements. There are $i_1+\ldots+i_k$ slots for the instructions, then choose $i_1$ in which to place the first event handler instructions, $i_2$ of the remaining slots in which to place the second event handler instructions, and so on. This gives the result  ${\small m=\begin{pmatrix}
+	%\displaystyle\sum_{j=1}^{k} i_j \\
+	i_1+\ldots+i_k\\
+	i_1 \\
+	\end{pmatrix}\times
+\begin{pmatrix}
+%\displaystyle\sum_{j=2}^{k} i_j \\
+	i_2+\ldots+i_k\\
+i_2 \\
+\end{pmatrix}\times	\ldots\times
+\begin{pmatrix}
+%\displaystyle\sum_{j=k}^{k} i_j \\
+i_k\\
+i_k \\
+\end{pmatrix}}$ which equals to ${\small %\frac
+{(\sum_{j=1}^{k} i_j)!}/{\prod_{j=1}^{k}(i_j!)}.}$ Thus, isolation minimizes $m$ to $k!$.}.  
+\Fatem{this is a very bad sentence because it doesnt convey any meaning, Done!}
 %TODO::why this is possible
 %The network constraint of each state transition isolates those connected actors and computes the effect of processing of events. 
 
@@ -75,8 +114,7 @@ However, the isolation of actors makes this reduction more effective for the ana
 
 %an event while isolating those connected actors. %while it is restricted to the set of topologies for which that behavior is valid. 
 
-We elaborate the idea with a concrete example on AODV. Consider a MANET with four nodes $n_1$, $n_2$, $n_3$, and $n_4$, where $n_1$ and $n_3$ are the source and destination, respectively, and $n_3$ has a request message to handle, received from $n_2$.
-\fixme{the above sentence can be written in a much more understandable way}
+We elaborate the idea with a concrete example on AODV. Consider a MANET with four nodes $n_1$, $n_2$, $n_3$, and $n_4$, where $n_1$ is the source and and $n_3$ is the destination while $n_3$ has a routed request message from $n_2$ to handle. %\fixme{the above sentence can be written in a much more understandable way}
 Recall that a destination node, upon receiving a request message, ${\it rec\_rreq}$, unicasts ${\it rec\_rrep}$ to the next-hop of the request origin  \fixme{what does it mean: the next hop of the request origin?}
 $({\it oip\_})$ (line $26$ in Figure \ref{code:aodv}). We consider that the next-hop for $n_3$ to reach $n_2$ is through $n_4$. The state in which $n_3$ has a route request message to handle is determined with a thick border in Figure \ref{Fig::reduction}. As a consequence of handling the route request, two categories of state-transitions are generated; one for the case that the destination $n_3$ is connected to $n_4$, denoted by $\{n_3\nconn n_4\}$, and one for the case that it is disconnected, denoted by $\{n_3\nconn n_4\}$. In the first case, %the destination and next-hop are considered in isolation and 
 the effect of processing a route request message is computed by inserting a ${\it rec\_rrep}$ message in the queue of $n_4$. In the second case, $n_3$ will inform its upstream nodes that $n_4$ is not reachable through it anymore by broadcasting an error message, ${\it rec\_rerr}$ (this part of code has been abstracted in line $33$). %So, the state-transitions are partitioned in further to %In other words, the effect of processing the request event is computed for those connected subsets of actors excluding the next-hop in isolation. 
