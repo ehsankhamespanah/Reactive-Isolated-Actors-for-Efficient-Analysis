@@ -44,7 +44,7 @@ reactiveclass Node(){
 		boolean gen_msg = false;
 		... /*processing code*/
 		if(gen_msg == true){
-			if(ip == oip_ ){
+			if(ip == sip_ ){
 				... /*forward packet*/ }
 			else {
 				hops_= hops_+1;
