@@ -19,6 +19,16 @@ Actor model is a model of concurrent computation for developing parallel, distri
 Rebeca \cite{DBLP:journals/fuin/SirjaniMSB04,DBLP:conf/fmco/Sirjani06} is an actor-based language proposed to bridge the gap between software engineers and formal methods community.
 Rebeca comes with a formal semantics and is the first actor-based language with model checking support \cite{DBLP:journals/csur/BoerSHHRDJSKFY17}.
 
+
+Models can be used for both synthesis and analysis \cite{DBLP:conf/facs2/LeeS18}. We build abstract models that serve as a specification of a system to be built, and then we refine the models, adding
+details until we build the system itself. The process is usually iterative, with
+the specifications evolving along with their refinements. We may have different analysis purposes like verification, validation, and performance evaluation. 
+Model checking, simulation, and building physical prototypes can all be used as methods for analysis. Simulation, which is the execution of an executable
+model, reveals one possible behavior of a model with one set of inputs. Model
+checking reveals all possible behaviors of a model over a family of inputs \cite{DBLP:conf/facs2/LeeS18}.
+%If we have formal and automatic refinement techniques, we may be able to avoid introducing errors in the refined models while details are added. In this case, synthesis is said to be “correct by construction.”
+
+
 %Why actors are good models for distributed systems?
 %\noindent\textbf{Faithful models for distributed reactive systems} %\label{sec::Faithfulness}
 %How models shape the thought and ease the analysis
@@ -42,13 +52,6 @@ components.
 Faithfulness can be seen as the key motivation behind domain-specific
 languages.
 
-Models can be used for both synthesis and analysis \cite{DBLP:conf/facs2/LeeS18}. We build abstract models that serve as a specification of a system to be built, and then we refine the models, adding
-details until we build the system itself. The process is usually iterative, with
-the specifications evolving along with their refinements. We may have different analysis purposes like verification, validation, and performance evaluation. 
-Model checking, simulation, and building physical prototypes can all be used as methods for analysis. Simulation, which is the execution of an executable
-model, reveals one possible behavior of a model with one set of inputs. Model
-checking reveals all possible behaviors of a model over a family of inputs \cite{DBLP:conf/facs2/LeeS18}.
-%If we have formal and automatic refinement techniques, we may be able to avoid introducing errors in the refined models while details are added. In this case, synthesis is said to be “correct by construction.”
 
 In the following section we explain what we mean by isolation of actors and how it can help in analysis. We then focus on a model that is presented as the semantics of Timed Rebeca and can help by a significant amount of reduction in the state space while doing the analysis. We believe that similar techniques can be used in different analysis methods for event-based reactive isolated modules. 
 %
