@@ -3,6 +3,37 @@
 Timed Rebeca is an extension of Rebeca where we can model computational time, network delays, and periodic events \cite{DBLP:journals/scp/ReynissonSACJIS14,DBLP:conf/birthday/SirjaniK16}.
 The syntax of Timed Rebeca is showed in Figure \ref{fig::TRebecaSyntax}.
 
+\begin{figure}[!htbp]
+ 	\begin{center}
+ 		\small
+ 		\begin{mdframed}
+ 			\begin{align*}
+ 				\mathit{Model} &\Coloneqq  Class^* ~ Main \qquad \\
+ 				Main &\Coloneqq \mathbf{main} ~ \{ ~ InstanceDcl^* ~ \} \qquad \\
+ 				InstanceDcl &\Coloneqq \mathit{className} ~ \mathit{rebecName}~(\langle rebecName \rangle ^*) \\
+ 							& ~~~ : (\langle literal \rangle ^*);\\
+ 				Class &\Coloneqq \mathbf{reactiveclass} ~ className ~ \{ \\
+ 					  &\ ~~~ ~ \mathit{KnownRebecs} ~ \mathit{Vars} ~ \mathit{MsgSrv}^* ~ \}\\
+ 				KnownRebecs &\Coloneqq \mathbf{knownrebecs} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
+ 				\mathit{Vars} &\Coloneqq \mathbf{statevars} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
+ 				\mathit{VarDcl} &\Coloneqq type ~ \langle v \rangle ^+;\\
+ 				MsgSrv &\Coloneqq \mathbf{msgsrv} ~ methodName(\langle type ~ v \rangle ^*) ~\\
+				             &\ ~~~  \{ ~ Stmt^* ~ \} \\
+ 				Stmt &\Coloneqq v = e; ~| ~ v = ?(e\langle ,e \rangle^+); ~| ~ Call;| ~ \\
+ 					 &\ ~~~  ~ if ~ (e) ~ \{ ~ Stmt^* ~ \} ~ [else ~ \{ ~ Stmt^* ~ \}]; |   \\
+					 &\ ~~~ ~ \mathbf{delay}(t); \\
+ 				Call &\Coloneqq rebecName.methodName(\langle e \rangle ^*) \\
+ 					 &\ ~~~  [\mathbf{after}(t)]  [\mathbf{deadline}(t)]\\
+			%\\
+			%	& \text{(a) Abstract Syntax of Rebeca}
+ 			\end{align*}
+ 		\end{mdframed}
+ 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression.}
+ 		\label{fig::TRebecaSyntax}
+ 	\end{center}
+ \end{figure}
+
+
 Floating Time Transition System (FTTS) is proposed based on the isolation of timed rebecs \cite{DBLP:conf/facs2/KhamespanahSVK15,DBLP:journals/scp/KhamespanahSSKI15}. The idea behind FTTS is similar to partial order reduction (POR) but the technique does not fit exactly in the definition of POR. 
 %
 In POR we exploit the commutativity of concurrently executed transitions, which result in the same state when executed in different orders. So, we can only expand a representative subset of all enabled transitions and abstract the rest away while preserving the properties of interest. %This way the properties are preserved. 
@@ -58,7 +89,8 @@ The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FT
 The relation between TTS and FTTS of a Timed Rebeca model is not trivial and cannot be explained as partial order reduction, i.e., you may find states in FTTS which are not in TTS.
 For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS there are no similar states in TTS. Nevertheless, in \cite{FACSFTTS} we proved a bisimulation relation between FTTS and TTS to prove that order of events is preserved in FTTS.
 
-To understand the FTTS semantics of Timed Rebeca we should not start from an standard TTS semantics. We have to start from the Timed Rebeca model, and think of an event-based semantics. By focusing on the event-based properties as the properties of interest, we narrow down the interesting transitions to the \textit{event} transitions which are taking the messages from the queue and executing the corresponding message server.
+It is not easy to understand the FTTS semantics of Timed Rebeca if we start from the standard TTS semantics. A better way is to start from the Timed Rebeca model, and think of an event-based semantics. By focusing on the event-based properties as the properties of interest, we narrow down the interesting transitions to the \textit{event} transitions which are taking the messages from the queue and executing the corresponding message server.
+This way, we have macro-step semantics where on each transition we take the enabled event (i.e. message) and execute the corresponding message server all in one transition. This is similar to the original semantics of Rebeca presented in \cite{DBLP:journals/fuin/SirjaniMSB04}, but here we have messages in the queue tagged by timestamps. The main technical point here is how to choose the message to take next. The algorithm for making the state space looks into the queues of all the rebecs and picks the message that is enabled \textit{earlier} than the others.  The tricky point is to get the definition of \textit{enabled earlier} correctly. The first idea that comes to mind is to pick the message with the least timestamp, but we also need to check the current time or \textit{now} of the receiver rebec. If the \textit{now} is larger than the timestamp then that would be the time that the messag will be really taken. So,  we need to find the maximum between  the timestamps and the \textit{now} of the receiver rebec, for all rebecs and all the messages in the queues,  and find the least among these values. That would be the message that will be taken first and will be the event on the transition.
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
