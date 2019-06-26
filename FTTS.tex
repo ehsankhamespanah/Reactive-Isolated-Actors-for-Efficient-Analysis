@@ -3,12 +3,36 @@
 Timed Rebeca is an extension of Rebeca where we can model computational time, network delays, and periodic events \cite{DBLP:journals/scp/ReynissonSACJIS14,DBLP:conf/birthday/SirjaniK16}.
 The syntax of Timed Rebeca is showed in Figure \ref{fig::TRebecaSyntax}.
 
-\begin{figure}
-\centering
-\includegraphics[width=.15\textwidth]{resources/BFTTS.pdf}
-\caption{ Timed Rebeca Syntax \ref{src::FTTS-actor-model}.}
-\label{fig::TRebecaSyntax}
-\end{figure}
+\begin{figure}[!htbp]
+ 	\begin{center}
+ 		\small
+ 		\begin{mdframed}
+ 			\begin{align*}
+ 				\mathit{Model} &\Coloneqq  Class^* ~ Main \qquad \\
+ 				Main &\Coloneqq \mathbf{main} ~ \{ ~ InstanceDcl^* ~ \} \qquad \\
+ 				InstanceDcl &\Coloneqq \mathit{className} ~ \mathit{rebecName}~(\langle rebecName \rangle ^*) \\
+ 							& ~~~ : (\langle literal \rangle ^*);\\
+ 				Class &\Coloneqq \mathbf{reactiveclass} ~ className ~ \{ \\
+ 					  &\ ~~~ ~ \mathit{KnownRebecs} ~ \mathit{Vars} ~ \mathit{MsgSrv}^* ~ \}\\
+ 				KnownRebecs &\Coloneqq \mathbf{knownrebecs} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
+ 				\mathit{Vars} &\Coloneqq \mathbf{statevars} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
+ 				\mathit{VarDcl} &\Coloneqq type ~ \langle v \rangle ^+;\\
+ 				MsgSrv &\Coloneqq \mathbf{msgsrv} ~ methodName(\langle type ~ v \rangle ^*) ~\\
+				             &\ ~~~  \{ ~ Stmt^* ~ \} \\
+ 				Stmt &\Coloneqq v = e; ~| ~ v = ?(e\langle ,e \rangle^+); ~| ~ Call;| ~ \\
+ 					 &\ ~~~  ~ if ~ (e) ~ \{ ~ Stmt^* ~ \} ~ [else ~ \{ ~ Stmt^* ~ \}]; |   \\
+					 &\ ~~~ ~ \mathbf{delay}(t); \\
+ 				Call &\Coloneqq rebecName.methodName(\langle e \rangle ^*) \\
+ 					 &\ ~~~  [\mathbf{after}(t)]  [\mathbf{deadline}(t)]\\
+			%\\
+			%	& \text{(a) Abstract Syntax of Rebeca}
+ 			\end{align*}
+ 		\end{mdframed}
+ 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression.}
+ 		\label{fig::TRebecaSyntax}
+ 	\end{center}
+ \end{figure}
+
 
 Floating Time Transition System (FTTS) is proposed based on the isolation of timed rebecs \cite{DBLP:conf/facs2/KhamespanahSVK15,DBLP:journals/scp/KhamespanahSSKI15}. The idea behind FTTS is similar to partial order reduction (POR) but the technique does not fit exactly in the definition of POR. 
 %
