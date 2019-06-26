@@ -3,6 +3,13 @@
 Timed Rebeca is an extension of Rebeca where we can model computational time, network delays, and periodic events \cite{DBLP:journals/scp/ReynissonSACJIS14,DBLP:conf/birthday/SirjaniK16}.
 The syntax of Timed Rebeca is showed in Figure \ref{fig::TRebecaSyntax}.
 
+\begin{figure}
+\centering
+\includegraphics[width=.15\textwidth]{resources/BFTTS.pdf}
+\caption{ Timed Rebeca Syntax \ref{src::FTTS-actor-model}.}
+\label{fig::TRebecaSyntax}
+\end{figure}
+
 Floating Time Transition System (FTTS) is proposed based on the isolation of timed rebecs \cite{DBLP:conf/facs2/KhamespanahSVK15,DBLP:journals/scp/KhamespanahSSKI15}. The idea behind FTTS is similar to partial order reduction (POR) but the technique does not fit exactly in the definition of POR. 
 %
 In POR we exploit the commutativity of concurrently executed transitions, which result in the same state when executed in different orders. So, we can only expand a representative subset of all enabled transitions and abstract the rest away while preserving the properties of interest. %This way the properties are preserved. 
