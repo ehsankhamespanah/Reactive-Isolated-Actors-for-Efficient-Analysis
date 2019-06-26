@@ -15,24 +15,44 @@ Nowadays distributed systems are everywhere providing scalability and redundancy
 %Reactive systems are defined like this
 %Actor-based languages and distributed systems
 Actor model is a model of concurrent computation for developing parallel, distributed and mobile systems \cite{Hewitt:77:Actors,Agha:97:ActorComputation}. Each actor is an autonomous object that operates concurrently, and  send and receive messages asynchronously.
-
+%
 Rebeca \cite{DBLP:journals/fuin/SirjaniMSB04,DBLP:conf/fmco/Sirjani06} is an actor-based language proposed to bridge the gap between software engineers and formal methods community.
-Rebeca comes with a formal semantics and is the first actor-based language with model checking support.
+Rebeca comes with a formal semantics and is the first actor-based language with model checking support \cite{DBLP:journals/csur/BoerSHHRDJSKFY17}.
 
 %Why actors are good models for distributed systems?
 %\noindent\textbf{Faithful models for distributed reactive systems} %\label{sec::Faithfulness}
 %How models shape the thought and ease the analysis
 
 %From Rocco paper: 
-A major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation \cite{Rocco}.
+According to De Nicola et.al. in \cite{DBLP:conf/coordination/NicolaFPT18} a major challenge in designing languages is to devise appropriate abstractions and linguistic primitives to deal with the specificities of the domain under investigation.
 %
 %From Gul and Rajesh: 
 %http://web.cs.ucla.edu/~palsberg/course/cs239/papers/karmani-agha.pdfA 
-A programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented \cite{GulKamrani}. 
+Karmani and Agha believe that a programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented \cite{DBLP:reference/parallel/KarmaniA11}. 
 
-In \cite{Friendliness} it is argued that faithfulness can also bring in analizability.
+In \cite{DBLP:conf/birthday/FriendlinessSirjani18}, Sirjani defines faithfulness as the similarity of the
+model and the system; and it is argued that faithfulness can bring  analizability and tracability. 
+According to \cite{DBLP:conf/birthday/FriendlinessSirjani18}, a modeling
+language is faithful to a system if the model of computation supported by the
+language matches the model of computation of [the features of interest of] the
+system. 
+In \cite{Ptolemy:14:Book} a model of computation (MoC) is defined as a collection of rules that govern
+the execution of the [concurrent] components and the communication between
+components.
+Faithfulness can be seen as the key motivation behind domain-specific
+languages.
 
-\noindent\textbf{Analysis of distributed systems and isolated actors.}
+Models can be used for both synthesis and analysis \cite{DBLP:conf/facs2/LeeS18}. We build abstract models that serve as a specification of a system to be built, and then we refine the models, adding
+details until we build the system itself. The process is usually iterative, with
+the specifications evolving along with their refinements. We use different analysis methods for different analysis purposes like verification, validation, and performance evaluation. 
+Model checking, simulation, and building physical prototypes can all be used as methods for analysis. Simulation, which is the execution of an executable
+model, reveals one possible behavior of a model with one set of inputs. Model
+checking reveals all possible behaviors of a model over a family of inputs \cite{DBLP:conf/facs2/LeeS18}.
+%If we have formal and automatic refinement techniques, we may be able to avoid introducing errors in the refined models while details are added. In this case, synthesis is said to be “correct by construction.”
+
+
+%\noindent\textbf{Analysis of distributed systems and isolated actors.}
+\subsection{Analysis of Distributed Systems and Isolated Actors.}
 We distinguish three levels of abstraction here: the distributed software system itself with all the implementation details, the modeling language which is Rebeca here, and the generated state space which is built for the sake of analysis and  we model as a state transition system. There are alternative ways for analysis, like using logical theorems and applying reasoning based on that, but here we use different variations of state transition systems.
 We sometimes call the transition system the semantics of our model as it shows the behavior in a formal way.
 
