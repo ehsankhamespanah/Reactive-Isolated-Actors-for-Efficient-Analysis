@@ -55,7 +55,7 @@ The progress of time is forced by the \texttt{delay} statement and also by \text
 We can assume that the time stamp of all the statements are zero when a model starts to execute, then in each actor the local time is increased by value of \texttt{t} if there is a \texttt{delay(t)} statement.
 A \texttt{send} statement with an  \texttt{after} does not cause any increase in the local time per se. The statement following the \texttt{send} statement has the same time stamp as the \texttt{send} statement itself.
 The \texttt{after} construct may cause an increase in the time when the actor picks the message annotated by \texttt{after} to be executed. The local time of the receiver actor is set to the time stamp of the message, unless it is already greater than that.
-The latter situation means that the message has been sitting in the queue while the actor has been busy executing another message.
+The latter situation means that the message  sits in the queue while the actor is busy executing another message.
 Remember that messages are executed atomically and are not preempted.
 %
 The progress of time happens in the case that the time stamp of the message is greater than the local time of the receiver actor, the local time will be pushed forward.
