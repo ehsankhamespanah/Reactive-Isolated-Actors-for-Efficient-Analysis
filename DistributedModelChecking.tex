@@ -47,7 +47,17 @@ main {
 }
 \end{lstlisting}
 
-Clinger's event diagrams can be seen as the detailed representations of CDG. As actors are isolated, the only causality relation among events is expressed by sending a message. So, the causality relation of events in a CDG can be extracted from the source codes of actor models using static analysis. This way, we over-approximate the causality relations in CDGs. Figure \ref{fig::cdg} illustrates the CDG which corresponds to the Clinger's event diagram of Figure \ref{fig::clinger}.
+Clinger's event diagrams can be seen as the detailed representations of CDG.
+\Marjan{it may be more clear if you change the sentence and say: CDG is an abstract representation of Clinger's event diagram, but still it is not clear enough, what is abstracted in CDG? It seems that the place of nodes and edges are changed ... please make it more clear.}
+As actors are isolated, the only causality relation among events is expressed by sending a message. So, the causality relation of events in a CDG can be extracted from the source codes of actor models using static analysis. 
+This way, we over-approximate the causality relations in CDGs.
+\Marjan{Because of the isolation of actors in Rebeca, there is no implicit causality relation among events, and for building the CDGs we extract  the causality relations by static analysis of the Rebeca models. In fact, the CDGs give us an over-approximation of the causality relations among the events, but that serves our purpose. 
+}
+%
+\fixme{Is it an over-approximation because of conditional statements?
+Why is CDG more abstract than Clinger's event diagram?}
+%
+Figure \ref{fig::cdg} illustrates the CDG which corresponds to the Clinger's event diagram of Figure \ref{fig::clinger}.
 
 \begin{figure}
 \centering
@@ -77,5 +87,10 @@ Clinger's event diagrams can be seen as the detailed representations of CDG. As 
 \label{fig::clinger-cdg}
 \end{figure}
 
-We designated the existence of a relation between the cycles in a CDG and the cycles in its corresponding state space in \cite{DBLP:journals/eceasst/KhamespanahSMSR15}. \Fatem{It is not clear that how isolation helps in resolving this issue}. 
-As mentioned before, Rebeca actors are completely isolated and the only way of expressing causality among events is the message passing mechanism, explicitly specified in Rebeca models. Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumption in practice.
+We designated 
+\fixme{What do you mean designated?}
+the existence of a relation between the cycles in a CDG and the cycles in its corresponding state space in \cite{DBLP:journals/eceasst/KhamespanahSMSR15}. 
+%
+%\Fatem{It is not clear that how isolation helps in resolving this issue}. 
+%As mentioned before, Rebeca actors are completely isolated and the only way of expressing causality among events is the message passing mechanism, explicitly specified in Rebeca models. 
+Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumption in practice.
