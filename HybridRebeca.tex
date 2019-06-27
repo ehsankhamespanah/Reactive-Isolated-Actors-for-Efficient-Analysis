@@ -1,7 +1,17 @@
-\section{Verification of Hybrid Reactive Systems}\label{sec::HRebeca}
-Embedded systems consist of microprocessors which control physical behavior. In such \emph{hybrid} systems, physical and cyber behaviors, characterized as continuous and discrete respectively, affect each other; the physical components may trigger the cyber components which change (by (de)activating) physical components in response. The new generation of embedded systems, also called cyber-physical systems (CPSs), composed of microprocessors controlling other software/physical systems via networks. For instance, in automotive systems, there are components like sensors, actuators, and controllers that communicate asynchronously with each other through a CAN network. The computational model of Rebeca provides a suitable level of abstraction to faithfully model such distributed asynchronously communicating systems in an intuitive way.
+\section{Hybrid Reactive Systems}\label{sec::HRebeca}
+Embedded systems consist of microprocessors which control physical behavior. In such \emph{hybrid} systems, physical and cyber behaviors, characterized as continuous and discrete respectively, affect each other; the physical components may trigger the cyber components which 
+%change 
+in response may 
+(de)activate physical components.
+%in response. 
+The new generation of embedded systems, also called cyber-physical systems (CPSs), composed of microprocessors controlling other software/physical systems via networks. For instance, in automotive systems, there are components like sensors, actuators, and controllers that communicate asynchronously with each other through a CAN network. The computational model of Rebeca provides a suitable level of abstraction to faithfully model such distributed asynchronously communicating systems in an intuitive way.
 
-Timed Rebeca was extended by Hybrid Rebeca \cite{HRebeca} with physical behavior to support hybrid systems. Such an extension allows non-determinism inherent in concurrent and distributed systems, e. g., in the case of simultaneous arrival of messages (and no explicit priority-based policy to choose one over the other) to model check the possible implementations of systems. In Hybrid Rebeca, physical behaviors are encapsulated in so-called physical actors. %Separation of physical actors from software prevent the modeler to wrongly devise a model as shown below  
+%Timed Rebeca was extended by Hybrid Rebeca \cite{HRebeca} with physical behavior to support hybrid systems.
+In Hybrid Rebeca \cite{HRebeca}, Timed Rebeca is extended with physical behavior to support hybrid systems.
+%Such an extension allows modeling of non-determinism inherent in concurrent and distributed systems, e.g., in the case of simultaneous arrival of messages (and no explicit priority-based policy to choose one over the other).
+Like in Timed Rebeca, Hybrid Rebeca  allows modeling of non-determinism inherent in concurrent and distributed systems, e.g., in the case of simultaneous arrival of messages (and no explicit priority-based policy to choose one over the other).
+%to model check the possible implementations of systems.
+In Hybrid Rebeca, physical behaviors are encapsulated in so-called physical actors. %Separation of physical actors from software prevent the modeler to wrongly devise a model as shown below  
 %
 %\begin{lstlisting}[xleftmargin=.4\textwidth,language=HRebeca,numbers=none,basicstyle=\footnotesize, frame=none]
 %if (a>4) {
@@ -10,6 +20,11 @@ Timed Rebeca was extended by Hybrid Rebeca \cite{HRebeca} with physical behavior
 %}
 %\end{lstlisting}
 %
-Each physical actor, in addition to message handlers, is defined by a set of modes. Each mode defines the continuous behavior of the actor. A physical actor (which is instantiated from a physical class) must always have one active mode. By changing the active mode of a physical actor, it's possible to change the continuous behavior of the actor. The active mode can be changed upon handling a message from either a software actor (controller) or a physical actor. The semantics of Hybrid Rebeca is defined as a hybrid automaton, for which many verification algorithms and tools are available. 
+Each physical actor, in addition to message handlers, is defined by a set of modes. Each mode defines the continuous behavior of the actor. A physical actor (which is instantiated from a physical class) must always have one active mode. By changing the active mode of a physical actor, it's possible to change the continuous behavior of the actor. The active mode can be changed upon handling a message that is received from either a software actor (controller) or a physical actor. The semantics of Hybrid Rebeca is defined as a hybrid automaton, for which many verification algorithms and tools are available. 
 
-We have shown that by using Hybrid Rebeca, the cost of improving and modifying models is vastly reduced compared to modeling in hybrid automata \cite{HRebcaSoSym} as the computational model of Hybrid Rebeca encapsulates many complexities. These complexities subsume high-level concepts like message passing and message buffering. Furthermore, modeling these complexities directly in hybrid automata can hugely decrease the analyzability of the models. Concluding that the abstraction resulted from choosing actors as the basic units of computation, offers more friendliness towards cyber-physical systems compared to the low-level languages like hybrid automata.
+In \cite{HRebcaSoSym}, we  show that how using Hybrid Rebeca, can reduce the cost of  modifying models compared to the cost of changing a   hybrid automata.
+%The reason is that  the model of computation of Hybrid Rebeca encapsulates many complexities.
+The reason is that  in Hybrid Rebeca, modeling concepts like message passing and message buffering can be handled in the model at a higher level of abstraction compared to hybrid automata. Furthermore, modeling these features
+%complexities 
+directly in hybrid automata can  decrease the analyzability of the models. %Concluding that the abstraction resulted from choosing actors as the basic units of computation, offers more friendliness towards cyber-physical systems compared to the low-level languages like hybrid automata.
+We are currently working on more efficient analysis techniques for Hybrid Rebeca. We believe such techniques  can be developed based on the ease in modeling which we gained  by using Hybrid Rebeca. 
