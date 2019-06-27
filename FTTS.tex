@@ -2,6 +2,10 @@
 
 Timed Rebeca is an extension of Rebeca where we can model computational time, network delays, and periodic events \cite{DBLP:journals/scp/ReynissonSACJIS14,DBLP:conf/birthday/SirjaniK16}.
 The syntax of Timed Rebeca is showed in Figure \ref{fig::TRebecaSyntax}.
+\fixme{Syntax is messy}
+\Marjan{I should write a bit about the syntax and the extension in TRebeca
+
+Maybe this part on syntax and ... better go to the previous section?}
 
 \begin{figure}[!htbp]
  	\begin{center}
@@ -91,6 +95,9 @@ For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS th
 
  It is not easy to understand the FTTS semantics of Timed Rebeca if we start from the standard TTS semantics. A better way is to start from the Timed Rebeca model, and think of an event-based semantics. By focusing on the event-based properties as the properties of interest, we narrow down the interesting transitions to the \textit{event} transitions which are taking the messages from the queue and executing the corresponding message server.
 This way, we have macro-step semantics where on each transition we take the enabled event (i.e. message) and execute the corresponding message server all in one transition. This is similar to the original semantics of Rebeca presented in \cite{DBLP:journals/fuin/SirjaniMSB04}, but here we have messages in the queue tagged by timestamps (in Timed Rebeca we usually call the message queues the message bag with time-tagged messages). The main technical point here is how to choose the message to take next. The algorithm for making the state space looks into the queues of all the rebecs and picks the message that is enabled \textit{earlier} than the others.  The tricky point is to get the definition of \textit{enabled earlier} correctly. The first idea that comes to mind is to pick the message with the least timestamp, but we also need to check the current time or \textit{now} of the receiver rebec. If the value of \textit{now} is larger than the timestamp then that would be the time that the message can really be taken. So,  for each rebec we need to find the maximum between  the timestamps and the value of  \textit{now} of the receiver rebec, and we need to do that for all the rebecs and all the messages in their queues,  and find the least among these values. That would be the message that will be taken first and will be the event on the next transition. There may be more than one message with that characteristic, and in that case the choice is nondeterministic.
+
+
+\Marjan{I should add about BFTTS}
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
