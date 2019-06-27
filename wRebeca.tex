@@ -97,6 +97,7 @@ As this reduction technique is applied at the transition system level,
 it can be also applied if the actors were not isolated. However, the non-preemptive execution of event handlers at the model level makes this reduction at the state-space level more effective for the analysis of real-world protocols like AODV. 
 
 \fixme{Here you are talking only about the "atomic execution of methods", right? that we cannot really call isolation ... we should talk about atomic execution of methods and then maybe say why we can do it without loss of generality, that is because of isolation.}
+\fixme{I will add the text related to isolation and atomic execution of methods in Section 2, then here you can talk about atomic execution of methods. But we loose genrality if we have some kind of cyclic calling (or two calls from the same sender to the same receiver), I need to ask you if in your application such scenarios are possible or not - we are losing possible interleavings in these scenarios.}
 In following we discuss the amount of reductions achieved by combination of the isolation at the model
 \Marjan{level} and topology elimination at the \Marjan{level of the transition system.} 
 %semantics. 
