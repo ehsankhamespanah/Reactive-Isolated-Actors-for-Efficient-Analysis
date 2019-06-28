@@ -71,8 +71,21 @@ main {
 \label{fig::clinger-cdg}
 \end{figure}
 
-The most primitive and widely used distribution policy is random state distribution \cite{DBLP:journals/entcs/GaravelMS13}. Random state distribution policy distributes states among nodes based on their hash values. Random distribution policy guarantees load balancing. However, it is not an effective technique as cycles in the state space are scattered over many different nodes. Note that detecting cycles of state spaces is crucial for model checking against LTL-like properties; so, splitting them among nodes (i.e., reducing locality of cycles) dramatically increases the model checking time consumption. %In \cite{DBLP:journals/entcs/OrzanPE05}, another state space distribution policy is suggested to improve the locality of cycles. This policy is based on the static analysis of an abstracted model and detects \emph{may} or \emph{must} transition relations among states \cite{DBLP:conf/lics/LarsenT88}. Based on this analysis, if two states have a \emph{must} relation, they should be stored in a same node. We use a similar idea in our state distribution policy using CDG by partitioning causality relations of CDGs to \emph{may} and \emph{must} relations. 
-In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that each cycle in the state space of an actor model is mapped to a sub-cycle in the corresponding CDG of that model. So, associating each cycle of a CDG with a computational node of distributed model checkers eliminates cycles which are scattered among different nodes. In the case of having a CDG state which is shared among more than one cycles, the cycle that contains an edge which is associated with \emph{must} label determines the host of the state. In other cases, one of the possible cycles is randomly selected and the new state is distributed to its host. We have implemented CDG in the distributed model checking of Rebeca and the result of using CDG based distribution policy is shown in Table~\ref{ranomCDGMCTable-splitedge} for three different examples. Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumption in practice.
+The most primitive and widely used distribution policy is random state distribution \cite{DBLP:journals/entcs/GaravelMS13}. Random state distribution policy distributes states among nodes based on their hash values. Random distribution policy guarantees load balancing. However, it is not an effective technique as cycles in the state space are scattered over many different nodes. Note that detecting cycles of state spaces is crucial for model checking against LTL-like properties; so, splitting them among nodes (i.e., reducing locality of cycles) dramatically increases the time for model checking. % time consumption. %In \cite{DBLP:journals/entcs/OrzanPE05}, another state space distribution policy is suggested to improve the locality of cycles. This policy is based on the static analysis of an abstracted model and detects \emph{may} or \emph{must} transition relations among states \cite{DBLP:conf/lics/LarsenT88}. Based on this analysis, if two states have a \emph{must} relation, they should be stored in a same node. We use a similar idea in our state distribution policy using CDG by partitioning causality relations of CDGs to \emph{may} and \emph{must} relations. 
+In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that each cycle in the state space of an actor model 
+%is 
+can be mapped to a sub-cycle
+\Marjan{Why sub-cycle and not cycle?}
+in the %corresponding 
+CDG of that model. 
+%So, associating each cycle of a CDG with a computational node of distributed model checkers eliminates cycles which are scattered among different nodes. 
+\Marjan{So, we devise a distribution policy that is based on
+associating each cycle of a CDG with a computational node of our distributed model checker. When assigning the states of the state space to different nodes, we assign the state to the node which is associated to the corresponding CDG. This way we reduce the number of cycles which are scattered among different nodes.}
+%
+\fixme{fix the following sentence - we need to explain more perhaps - I'll try to do that}
+In the case that we have a state in CDG  which is shared among more than one cycle, the cycle that contains an edge which is associated with a \emph{must} label determines the host of the state. 
+%
+\fixme{fix the following sentence- I'll try to do that} In other cases, one of the possible cycles is randomly selected and the new state is distributed to its host. We have implemented the CDG-based distribution policy in the distributed model checking tool of Rebeca, and the result of using CDG-based distribution policy is shown in Table~\ref{ranomCDGMCTable-splitedge} for three different examples. Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumption. % in practice.
 
 %So, we detect the \emph{must} relations among the states of an actor model considering the cycles of its corresponding CDG and putting them in the same node. 
 
@@ -103,9 +116,10 @@ In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that each cycle in t
         \hline
         \end{tabular}
         \end{center}
-        }\caption{Split edges in the random and the CDG-based distribution policies.}\label{ranomCDGMCTable-splitedge}
+        }\caption{The number of split edges in the random and the CDG-based distribution policies (from \cite{DBLP:journals/eceasst/KhamespanahSMSR15}).}\label{ranomCDGMCTable-splitedge}
 \end{table*}
 
+\begin{comment} 
 The efficiency of this distribution policy is directly related to the accuracy of CDG.
 %Clinger's event diagrams can be seen as the detailed representations of CDG.
 %\Marjan{it may be more clear if you change the sentence and say: CDG is an abstract representation of Clinger's event diagram, but still it is not clear enough, what is abstracted in CDG? It seems that the place of nodes and edges are changed ... please make it more clear.}
@@ -130,3 +144,4 @@ Figure \ref{fig::cdg} illustrates the CDG which corresponds to the Clinger's eve
 %As mentioned before, Rebeca actors are completely isolated and the only way of expressing causality among events is the message passing mechanism, explicitly specified in Rebeca models. 
 
 Our technique is applicable to other distributed systems where the unit of concurrency can be modeled as isolated autonomous reactive objects and message passing is the only means of communication. 
+\end{comment}
