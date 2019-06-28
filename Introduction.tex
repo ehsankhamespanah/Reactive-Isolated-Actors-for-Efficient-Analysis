@@ -36,8 +36,8 @@ According to De Nicola et.al. in \cite{DBLP:conf/coordination/NicolaFPT18} a maj
 %
 %From Gul and Rajesh: 
 %http://web.cs.ucla.edu/~palsberg/course/cs239/papers/karmani-agha.pdfA 
-Karmani and Agha believe that a programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented \cite{DBLP:reference/parallel/KarmaniA11}. 
-
+Karmani and Agha believe that a programming language should facilitate the process of writing programs by being close to the conceptual level at which a programmer thinks about a problem, rather than at the level at which it may be implemented \cite{DBLP:reference/parallel/KarmaniA11}.
+%
 In \cite{DBLP:conf/birthday/FriendlinessSirjani18}, Sirjani defines faithfulness as the similarity of the
 model and the system; and it is argued that faithfulness can bring in analizability and tracability. 
 According to \cite{DBLP:conf/birthday/FriendlinessSirjani18}, a modeling
@@ -50,13 +50,17 @@ components.
 Faithfulness can be seen as the key motivation behind domain-specific
 languages.
 
-\Marjan{Here I should add: 
-Rebeca is designed to be faithful to ... At the same time we considered analyzability and so keeping things as simple as possible.
-Theories and tools are developed (cite papers). Rebeca is used in different applications (cite papers), and each application we devised new techniques mostly using the adavntage of isolation.}
+%\Marjan{Here I should add: Rebeca is designed to be faithful to ... At the same time we considered analyzability and so keeping things as simple as possible.Theories and tools are developed (cite papers). Rebeca is used in different applications (cite papers), and each application we devised new techniques mostly using the adavntage of isolation.}
+
+Rebeca is designed as a \textit{faithful} language for distributed software systems.
+It is an imperative actor-based language while original actor languages are mainly functional languages. It is an event-driven and asynchronous language, with implicit receive and non-blocking send statement. There is no shared variables, and methods are atomic and run to completion.
+A  tool suite for model checking is available at \cite{RebecaSite}. Theories, techniques and tools for compositional verification \cite{DBLP:journals/jucs/SirjaniMSB05}, symmetry and partial order reduction \cite{DBLP:journals/acta/JaghooriSMKM10}, and slicing \cite{DBLP:journals/scp/SabouriS10}  are proposed. All the above methods are based on techniques using isolation of actors.
+Rebeca is used for schedulability analysis of wireless sensor network applications \cite{DBLP:journals/sttt/KhamespanahSMA18}, protocol verification\cite{FOAC}, design exploration  and comparing routing algorithms \cite{DBLP:journals/eceasst/sharifiMMS13}. It is also used for lightweight preprocessing for agent-based simulation \cite{DBLP:journals/scp/BerardinisFJS18}. 
+
 
 In the following section we explain what we mean by isolation of actors and how it can help in analysis. We then focus on a model that is presented as the semantics of Timed Rebeca and can help by a significant amount of reduction in the state space while doing the analysis. We believe that similar techniques can be used in different analysis methods for event-based reactive isolated modules. 
 %
-In Section \ref{sec::DMC}, we present a technique used for analysis by distributed model checking which is specific for actors and Rebeca.
+In Section \ref{sec::DMC}, we present a technique used for analysis by distributed model checking which is specific for actors. The efficiency of the technique is checked for model checking Rebeca models.
 %
 Section \ref{sec::wrebeca} explains how we deployed special techniques to make analysis of  mobile adhoc networks possible.
 
