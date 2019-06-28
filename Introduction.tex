@@ -52,7 +52,7 @@ languages.
 
 %\Marjan{Here I should add: Rebeca is designed to be faithful to ... At the same time we considered analyzability and so keeping things as simple as possible.Theories and tools are developed (cite papers). Rebeca is used in different applications (cite papers), and each application we devised new techniques mostly using the adavntage of isolation.}
 
-Rebeca is designed as a \textit{faithful} language for distributed software systems.
+Rebeca stands for \textit{Reactive Objects Language}, and is designed as a \textit{faithful} language for  distributed reactive software systems.
 It is an imperative actor-based language while original actor languages are mainly functional languages. It is an event-driven and asynchronous language, with implicit receive and non-blocking send statement. There is no shared variables, and methods are atomic and run to completion.
 A  tool suite for model checking is available at \cite{RebecaSite}. Theories, techniques and tools for compositional verification \cite{DBLP:journals/jucs/SirjaniMSB05}, symmetry and partial order reduction \cite{DBLP:journals/acta/JaghooriSMKM10}, and slicing \cite{DBLP:journals/scp/SabouriS10}  are proposed. All the above methods are based on techniques using isolation of actors.
 Rebeca is used for schedulability analysis of wireless sensor network applications \cite{DBLP:journals/sttt/KhamespanahSMA18}, protocol verification\cite{FOAC}, design exploration  and comparing routing algorithms \cite{DBLP:journals/eceasst/sharifiMMS13}. It is also used for lightweight preprocessing for agent-based simulation \cite{DBLP:journals/scp/BerardinisFJS18}. 
@@ -66,16 +66,28 @@ Section \ref{sec::wrebeca} explains how we deployed special techniques to make a
 
 %\noindent\textbf{Analysis of distributed systems and isolated actors.}
 \section{Analysis of Distributed Systems and Isolated Actors}
-For explaining our approach, we distinguish three levels of abstraction: the distributed software system itself with all the implementation details, the modeling language which is Rebeca here, and the generated state space which is built for the sake of analysis and  we model it as a state transition system. There are alternative ways for analysis, like using logical theorems and applying reasoning based on that, but here we use different variations of state transition systems.
-We sometimes call the transition system the semantics of our model as it shows the behavior in a formal way.
 
+The syntax of Timed Rebeca is showed in Figure \ref{fig::TRebecaSyntax}.
+Timed Rebeca is an extension of Rebeca where we can model computational time, network delays, and periodic events \cite{DBLP:journals/scp/ReynissonSACJIS14,DBLP:conf/birthday/SirjaniK16}.
+%
+A Rebeca model consists of a set of reactive classes and a main part. In the \textit{main}, we declare the instances of the reactive classes as \textit{rebecs}. Rebec stands for reactive object, and is how actors are called in Rebeca. In a reactive class we define the known rebecs to whom we can send messages, the state variables, and the message servers. Message servers are the methods or event handlers of the class. The statements in Rebeca are very similar to Java.
+The three keywords of \texttt{delay}, \texttt{after} and \texttt{deadline} are specific to Timed Rebeca.
 
-Active objects and actors are encapsulated modules with no shared variables. In Rebeca, we also choose to have atomic execution of message servers (i.e. methods, or event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
+%\fixme{Syntax is messy}
+%\Marjan{I should write a bit about the syntax and the extension in TRebeca Maybe this part on syntax and ... better go to the previous section?}
+
+%Active objects and 
+Actors are encapsulated modules with no shared variables. In Rebeca, we also choose to have atomic execution of message servers (i.e. methods, or event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
 \Marjan{I should add here that why we can have atomic method execution without loss of generality, and ... maybe how we can model preemption?}
 Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a \textit{future}  construct in the language.
 This isolation of actors helps in more efficient analysis, and reduces the state space.
 Moreover, if we are only interested in the event-based properties we may be able to abstract even more and just keep the states that are followed by a transition which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events while abstracting away some of the states and transitions. 
 %This is what is done in partial order reduction.
+
+For explaining our approach, we distinguish three levels of abstraction: the distributed software system itself with all the implementation details, the modeling language which is Rebeca here, and the generated state space which is built for the sake of analysis and  we model it as a state transition system. There are alternative ways for analysis, like using logical theorems and applying reasoning based on that, but here we use different variations of state transition systems.
+We sometimes call the transition system the semantics of our model as it shows the behavior in a formal way.
+
+
 
 Floating Time Transition System is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
 	
