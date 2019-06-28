@@ -58,7 +58,8 @@ A  tool suite for model checking is available at \cite{RebecaSite}. Theories, te
 Rebeca is used for schedulability analysis of wireless sensor network applications \cite{DBLP:journals/sttt/KhamespanahSMA18}, protocol verification\cite{FOAC}, design exploration  and comparing routing algorithms \cite{DBLP:journals/eceasst/sharifiMMS13}. It is also used for lightweight preprocessing for agent-based simulation \cite{DBLP:journals/scp/BerardinisFJS18}. 
 
 
-In the following section we explain what we mean by isolation of actors and how it can help in analysis. We then focus on a model that is presented as the semantics of Timed Rebeca and can help by a significant amount of reduction in the state space while doing the analysis. We believe that similar techniques can be used in different analysis methods for event-based reactive isolated modules. 
+In the following section we explain what we mean by isolation of actors and how it can help in analysis. We then focus on a model %(FTTS) 
+that is presented as the semantics of Timed Rebeca and can help by a significant amount of reduction in the state space while doing the analysis. We believe that similar techniques can be used in different analysis methods for event-based reactive isolated modules. 
 %
 In Section \ref{sec::DMC}, we present a technique used for analysis by distributed model checking which is specific for actors. The efficiency of the technique is checked for model checking Rebeca models.
 %
@@ -79,7 +80,8 @@ The three keywords of \texttt{delay}, \texttt{after} and \texttt{deadline} are s
 %Active objects and 
 Actors are encapsulated modules with no shared variables. In Rebeca, we also choose to have atomic execution of message servers (i.e. methods, or event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
 \Marjan{I should add here that why we can have atomic method execution without loss of generality, and ... maybe how we can model preemption?}
-Our actors are reactive, when sending a message they are not blocked and there is no explicit receive. So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a \textit{future}  construct in the language.
+Our actors are reactive, there is no explicit receive and the messages (i.e. events) trigger the execution of the message servers (i.e. event handlers) when they are taken from the message queue.  Our actors are also asynchronous, when sending a message they are not blocked. 
+So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a \textit{future}  construct in the language (\textit{futures} are mostly used in active object languages \cite{DBLP:journals/csur/BoerSHHRDJSKFY17}).
 This isolation of actors helps in more efficient analysis, and reduces the state space.
 Moreover, if we are only interested in the event-based properties we may be able to abstract even more and just keep the states that are followed by a transition which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events while abstracting away some of the states and transitions. 
 %This is what is done in partial order reduction.

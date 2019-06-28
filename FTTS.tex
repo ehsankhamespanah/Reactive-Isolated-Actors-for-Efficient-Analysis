@@ -26,7 +26,8 @@
 			%	& \text{(a) Abstract Syntax of Rebeca}
  			\end{align*}
  		\end{mdframed}
- 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression.}
+ 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression.
+ 		\fixme{Add the part about queue length and parameters to the constructor - Check that the syntax is consistent in the three model that we have}}
  		\label{fig::TRebecaSyntax}
  	\end{center}
  \end{figure}
@@ -43,7 +44,8 @@ What we mean by floating time is that in each state of the state space, differen
 To avoid confusion, it is important to note the different models in different levels of abstraction, and also layering of models. We have (1) distributed systems, we use (2) Timed Rebeca to model distributed systems, and we model (3) the state space as Floating Time Transition System to do the analysis. 
 %
 Note that at the level of Timed Rebeca, actors have synchronised local clocks which gives us a notion of global time across the model. We use time stamps, and time stamps are comparable across all actors in the model. This makes our model simpler and more understandable, and our analysis more efficient.
-But in distributed systems we cannot assume synchronised clocks and time stamps for distributed software components. 
+But in distributed systems we cannot assume synchronised clocks and time stamps for distributed software components, at least not for free \footnote{Ptides\cite{DBLP:conf/dsrt/DerlerLM08} and Spanner\cite{} are two examples that assume synchronized clocks  (up to an error bound) and use logical time stamps.
+They proposed certain mechanisms to be able to have such assumption.}. 
 For that assumption to be valid and faithful enough to the system,  we rely on the layering and different responsibilities for different layers. For distributed actors (as faithful representatives of distributed software components) to be able to have synchronised clocks and comparable time stamps we rely on the lower-level network protocols to provide that for us. 
 
 In Timed Rebeca we have a concept of time and we can consider that each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system. We assume that local clocks of actors are synchronised and we  have time stamps on each statement  in the actors which are comparable across the actors.
