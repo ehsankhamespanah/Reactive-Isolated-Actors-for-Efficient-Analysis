@@ -18,7 +18,7 @@
  				MsgSrv &\Coloneqq \mathbf{msgsrv} ~ methodName(\langle type ~ v \rangle ^*) ~\\
 				             &\ ~~~  \{ ~ Stmt^* ~ \} \\
  				Stmt &\Coloneqq v = e; ~| ~ v = ?(e\langle ,e \rangle^+); ~| ~ Call;| ~ \\
- 					 &\ ~~~  ~ if ~ (e) ~ \{ ~ Stmt^* ~ \} ~ [else ~ \{ ~ Stmt^* ~ \}]; |   \\
+ 					 &\ ~~~  ~ {\it if} ~ (e) ~ \{ ~ Stmt^* ~ \} ~ [else ~ \{ ~ Stmt^* ~ \}]; |   \\
 					 &\ ~~~ ~ \mathbf{delay}(t); \\
  				Call &\Coloneqq rebecName.methodName(\langle e \rangle ^*) \\
  					 &\ ~~~  [\mathbf{after}(t)]  [\mathbf{deadline}(t)]\\
