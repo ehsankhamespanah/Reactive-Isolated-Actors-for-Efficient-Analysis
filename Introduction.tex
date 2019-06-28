@@ -73,6 +73,7 @@ Timed Rebeca is an extension of Rebeca where we can model computational time, ne
 %
 A Rebeca model consists of a set of reactive classes and a main part. In the \textit{main}, we declare the instances of the reactive classes as \textit{rebecs}. Rebec stands for reactive object, and is how actors are called in Rebeca. In a reactive class we define the known rebecs to whom we can send messages, the state variables, and the message servers. Message servers are the methods or event handlers of the class. The statements in Rebeca are very similar to Java.
 The three keywords of \texttt{delay}, \texttt{after} and \texttt{deadline} are specific to Timed Rebeca.
+Using \texttt{delay} we can model the computational time, using \texttt{after} we model network delays, and periodic events, and \texttt{deadline} is used to specify the timeout for handling the request we are sending out.
 
 %\fixme{Syntax is messy}
 %\Marjan{I should write a bit about the syntax and the extension in TRebeca Maybe this part on syntax and ... better go to the previous section?}
