@@ -6,7 +6,7 @@ To reduce the number of required communications, split transitions have to be av
 
 In a Clinger's diagram, events are arrival of messages to the receiver's message queue. A Clinger's event diagram comprises vertices (called \emph{dots}) for each event, and edges (called \emph{arrows}) that represent the activation relation of two events. Clinger's event diagram is typically drawn using parallel vertical swim-lanes for each actor, where the dots are placed for each event respecting their sequential execution order. Figure~\ref{fig::clinger} represents the Clingers' event diagram of a simple actor model, shown in Listing~\ref{src::actor-model}. In contrast, sent messages of actors are events in CDG and events are associated with edges instead of vertices. The other major difference between Clinger's event diagram and CDG is that Clinger's event diagram is an infinite graph which shows trace of events in actor programs. However, a CDG is generated for an actor model using static analysis of its source code and can accurately represent the flow of message passings among actors. A CDG shows by handling a message which messages \emph{may} or \emph{must} be sent. The idea of dividing edges to \emph{may} and \emph{must} is inspired from \cite{DBLP:conf/lics/LarsenT88} and as we will show later, it helps in having a more effective state distribution policy. Figure \ref{fig::cdg} illustrates the CDG which corresponds to the actor model of Listing~\ref{src::actor-model}.
 
-\begin{lstlisting}[language=rebeca, caption= A simple actor model, label=src::actor-model]
+\begin{lstlisting}[language=rebeca, caption= A simple actor model (from \cite{DBLP:journals/eceasst/KhamespanahSMSR15}), label=src::actor-model]
 reactiveclass AC1 {
    knownrebecs {AC2 ac2;}
    AC1() {
@@ -67,7 +67,7 @@ main {
   \label{fig::cdg}
 %}
 \end{subfigure}
-\caption{Clinger event diagram and CDG of the actor model in Listing \ref{src::actor-model}.}
+\caption{Clinger event diagram and CDG of the actor model in Listing \ref{src::actor-model} (from \cite{DBLP:journals/eceasst/KhamespanahSMSR15}).}
 \label{fig::clinger-cdg}
 \end{figure}
 
@@ -118,6 +118,8 @@ In the case that we have a state in CDG  which is shared among more than one cyc
         \end{center}
         }\caption{The number of split edges in the random and the CDG-based distribution policies (from \cite{DBLP:journals/eceasst/KhamespanahSMSR15}).}\label{ranomCDGMCTable-splitedge}
 \end{table*}
+
+Comparing to the other modeling languages, detecting the causality relation among events using static analysis in Rebeca is easier and more accurate. It is because of the fact that in Rebeca, actors are isolated, they don't have shared variables, and serves their message non-preemptively. These properties limits the only causality relation among events is expressed by sending a message. So, the causality relation of events in a CDG can be extracted from the source codes of actor models using static analysis. 
 
 \begin{comment} 
 The efficiency of this distribution policy is directly related to the accuracy of CDG.
