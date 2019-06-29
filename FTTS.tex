@@ -7,8 +7,8 @@
  			\begin{align*}
  		\mathit{Model} &\Coloneqq  Class^* ~ Main \qquad \\
  				Main &\Coloneqq \mathbf{main} ~ \{ ~ InstanceDcl^* ~ \} \qquad \\
- 				InstanceDcl &\Coloneqq \mathit{className} ~ \mathit{rebecName}~(\langle rebecName \rangle ^*)  : (\langle literal \rangle ^*);\\
- 				Class &\Coloneqq \mathbf{reactiveclass} ~ className ~ (literal) ~ \{ ~ \mathit{KnownRebecs} ~ \mathit{Vars} ~ Constructor ~ \mathit{MsgSrv}^* ~ \}\\
+ 				InstanceDcl &\Coloneqq \mathit{className} ~ \mathit{rebecName}~(\langle \mathit{rebecName} \rangle ^*)  : (\langle literal \rangle ^*);\\
+ 				Class &\Coloneqq \mathbf{reactiveclass} ~ \mathit{className} ~ (\mathit{queueLength}) ~ \{ ~ \mathit{KnownRebecs} ~ \mathit{Vars} ~ Constructor ~ \mathit{MsgSrv}^* ~ \}\\
  				KnownRebecs &\Coloneqq \mathbf{knownrebecs} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
  				\mathit{Vars} &\Coloneqq \mathbf{statevars} ~ \{ ~ \mathit{VarDcl}^* ~ \} ~ \\
  				\mathit{VarDcl} &\Coloneqq type ~ \langle v \rangle ^+;\\
@@ -18,8 +18,9 @@
  				Call &\Coloneqq rebecName.methodName(\langle e \rangle ^*) ~  [\mathbf{after}(t)]  [\mathbf{deadline}(t)]
  			\end{align*}
  		\end{mdframed}
- 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression.
- 		\fixme{Add the part about queue length and parameters to the constructor - Check that the syntax is consistent in the three model that we have.} \Ehsan{I added constructor definition and queue size to the syntax. Is it what you think about? or you wanna talking about semantics in the caption?}}
+ 		\caption{Abstract syntax of Timed Rebeca (from \cite{DBLP:journals/scp/KhamespanahSSKI15}). Angled brackets $\langle$...$\rangle$ are used as meta parenthesis, superscript $+$ for repetition at least once, superscript $*$ for repetition zero or more times, whereas using $\langle$...$\rangle$ with repetition denotes a comma separated list. Brackets $[...]$ indicates that the text within the brackets is optional. Identifiers $className$, $rebecName$, $methodName$, $v$, $literal$, and $type$ denote class name, rebec name, method name, variable, literal, and type, respectively; and $e$ denotes an (arithmetic, boolean or nondetermistic choice) expression. 
+ 		\fixme{Add the part about queue length and parameters to the constructor - Check that the syntax is consistent in the three model that we have.} \Ehsan{I added constructor definition and queue size to the syntax. Is it what you think about? or you wanna talking about semantics in the caption?}
+ 		\Marjan{No, I dont want to have constructor explicitly in the grammar, I want just want an explanation in the caption that the constructor is a message server with the name of the class with two parameters?? one is the queue length ...}}
  		
  		\label{fig::TRebecaSyntax}
  	\end{center}
@@ -110,18 +111,24 @@ Only in the state $s_9$, when there are no transitions of types $\tau$ or \texti
 
 The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FTTSandTTS}.b. From this figure you may observe that the only transitions in FTTS are the transitions of type \textit{event}, and you may also notice the reduction in the state space.
 %
+%\Marjan{I should put the following sentence somewhere appropriate.}
+%In Figure \ref{fig::FTTSandTTS}.b you can see how the
+Another observation is that
+rebecs may have different current times (\textit{now}) in the same state. That is the reason we use the term \textit{floating time}.
+
+%
 The relation between TTS and FTTS of a Timed Rebeca model is not trivial and cannot be explained as partial order reduction, i.e., you may find states in FTTS which are not in TTS.
 For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS there are no similar states in TTS. Nevertheless, in \cite{DBLP:conf/facs2/KhamespanahSVK15} we proved a bisimulation relation between FTTS and TTS to prove that the order of events is preserved in FTTS.
 
  It is not easy to understand the FTTS semantics of Timed Rebeca if we start from the standard TTS semantics. A better way is to start from the Timed Rebeca model, and think of an event-based semantics. By focusing on the event-based properties as the properties of interest, we narrow down the interesting transitions to the \textit{event} transitions which are taking the messages from the queue and executing the corresponding message server.
 This way, we have macro-step semantics where on each transition we take the enabled event (i.e. message) and execute the corresponding message server all in one transition. This is similar to the original semantics of Rebeca presented in \cite{DBLP:journals/fuin/SirjaniMSB04}, but here we have messages in the queue tagged by timestamps (in Timed Rebeca we usually call the message queues the message bag with time-tagged messages). The main technical point here is how to choose the message to take next. The algorithm for making the state space looks into the queues of all the rebecs and picks the message that is enabled \textit{earlier} than the others.  The tricky point is to get the definition of \textit{enabled earlier} correctly. The first idea that comes to mind is to pick the message with the least timestamp, but we also need to check the current time or \textit{now} of the receiver rebec. If the value of \textit{now} is larger than the timestamp then that would be the time that the message can really be taken. So,  for each rebec we need to find the maximum between  the timestamps and the value of  \textit{now} of the receiver rebec, and we need to do that for all the rebecs and all the messages in their queues,  and find the least among these values. That would be the message that will be taken first and will be the event on the next transition. There may be more than one message with that characteristic, and in that case the choice is nondeterministic.
 
-\Marjan{I should put the following sentence somewhere appropriate.}
-In Figure \ref{fig::FTTSandTTS}.b you can see how the rebecs may have different current times (\textit{now}) in the same state. That is the reason we used the term \textit{floating time}. 
 
 The Bounded Floating Time Transition System (BFTTS) for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::BFTTS}. 
-In many reactive systems the behavior becomes recurrent after a while, and it gives us the chance to have a bounded number of states and transitions. When we add the notion of time to our model and consequently to the transition system, when the time is increasing in the model we are at the risk of having an unbounded \Ehsan{infinite instead of unbounded} state space even when the behavior is recurrent.
-In BFTTS, if the only difference between two states is an equal shift in \textit{time-dependent} values we merge those two states to one and will make the shift clear on the transition. \Ehsan{Note that the future behavior of these two states are the same as there is no statement in Timed Rebeca that have access to the absolute time of the model.} 
+In many reactive systems the behavior becomes recurrent after a while, and it gives us the chance to have a bounded number of states and transitions. When we add the notion of time to our model and consequently to the transition system, when the time is increasing in the model we are at the risk of having an unbounded %\Ehsan{infinite instead of unbounded} 
+state space even when the behavior is recurrent.
+In BFTTS, if the only difference between two states is an equal shift in \textit{time-dependent} values we merge those two states to one and will make the shift clear on the transition. %\Ehsan{Note that the future behavior of these two states are the same as there is no statement in Timed Rebeca that have access to the absolute time of the model.} 
+\Marjan{Note that there is no statement in Timed Rebeca that allows access to the absolute value of \textit{now}  or let the modeler to assign an absolute value to it.}
 For example in Figure \ref{fig::BFTTS}, after state $s_4$ we move to a state which is equivalent to state $s_2$ with a shift in both now variables (to be $18$ for $r_1$  and $16$ for $r_2$), and also a shift $14$ for the time tags of the messages (to be $28$ for the message in the queue of $r_1$ and $18$ for the message in the queue of $r_2$). So, we do not create a new state, instead we put a transition back to $s_2$, and make the shift of $14$ for the \textit{time-dependent} values clear on this transition. 
 
 \Marjan{Ehsan, would you please read the above paragraph? is it correct? can you add 1-2 sentences to say how we continue from where I stopped?}
@@ -134,35 +141,37 @@ For example in Figure \ref{fig::BFTTS}, after state $s_4$ we move to a state whi
         & & States & Trans. & Time & States & Trans. & Time & States & Trans.\\
         \hline
         \multirow{5}*{{Hadoop YARN Scheduler}}
-        &\textbf{1 AM} & 25 & 41 & 1$<$  sec  & 132    & 148    & $<1$ sec  & 19$\%$  & 28$\%$  \\
+        &\textbf{1 AM} & 25 & 41 & $<1$  sec  & 132    & 148    & $<1$ sec  & 19$\%$  & 28$\%$  \\
         &\textbf{2 AMs} & 499 & 1.02K & 1  sec  & 3.01K    & 4.28K    & 1 sec  & 17$\%$  & 24$\%$  \\
         &\textbf{3 AMs} & 5.10K & 13.3K & 1  sec  & 34.3K    & 66.7K    & 1 sec  & 15$\%$  & 20$\%$  \\
         &\textbf{4 AMs} & 28.19K & 92.87K & 2 secs  & 219K    & 553K    & 7 secs  & 13$\%$  & 17$\%$  \\
         &\textbf{5 AMs} & 220K & 840K & 11 secs  & 1.94M    & 5.69M    & 70 secs  & 11$\%$  & 15$\%$  \\
         \hline
         \multirow{6}*{{WSAN Application}}
-        & \textbf{33-6-4-2}  & 386 & 548 & 1$<$ sec  & 1.58K & 2.69K & 1$<$ sec  & 24$\%$ & 20 $\%$ \\
-        & \textbf{25-6-4-2}  & 1.21K & 1.63K & 1$<$ sec  &  5.04K & 8.59K & 1$<$ sec & 24$\%$ & 19$\%$ \\
-        & \textbf{30-6-4-2}  & 2.90K & 3.25K & 1$<$ sec  & 13.00K & 20.54K & 2 secs  & 22$\%$ & 16$\%$ \\
-        & \textbf{25-5-4-10} & 3.54K & 5.01K & 1$<$ sec  & 19.59K & 38.61K & 2 secs  & 18$\%$ & 13$\%$ \\
-        & \textbf{25-7-5-10} & 4.87K & 6.66K & 1$<$ sec  & 25.42K & 48.29K & 2 secs  & 19$\%$ & 14$\%$ \\
+        & \textbf{33-6-4-2}  & 386 & 548 & $<1$ sec  & 1.58K & 2.69K & $<1$ sec  & 24$\%$ & 20 $\%$ \\
+        & \textbf{25-6-4-2}  & 1.21K & 1.63K & $<1$ sec  &  5.04K & 8.59K & $<1$ sec & 24$\%$ & 19$\%$ \\
+        & \textbf{30-6-4-2}  & 2.90K & 3.25K & $<1$ sec  & 13.00K & 20.54K & 2 secs  & 22$\%$ & 16$\%$ \\
+        & \textbf{25-5-4-10} & 3.54K & 5.01K & $<1$ sec  & 19.59K & 38.61K & 2 secs  & 18$\%$ & 13$\%$ \\
+        & \textbf{25-7-5-10} & 4.87K & 6.66K & $<1$ sec  & 25.42K & 48.29K & 2 secs  & 19$\%$ & 14$\%$ \\
         & \textbf{50-9-3-2} & 9.20K & 11.79K & 1 sec    & 49.33K & 91.93K & 3 secs  & 18$\%$ & 13$\%$ \\
         \hline
         \multirow{7}*{{Ticket Service System}}
-        & \textbf{1 Customer} & 5     & 6     & 1$<$ sec  & 13     & 16     & 1$<$ secs  & 38$\%$  & 37 $\%$  \\
-        & \textbf{2 Customers} & 51        & 77        & 1$<$ sec  & 155        & 285       & 1$<$ sec  & 33$\%$  & 27$\%$  \\
-        & \textbf{3 Customers} & 252       & 418       & 1$<$ sec  & 842       & 1894       & 1$<$ sec  & 30$\%$  & 22$\%$  \\
-        & \textbf{4 Customers} & 1.29K     & 2.21K     & 1$<$ sec  & 4.75K     & 12.6K      & 1 sec     & 27$\%$  & 18$\%$   \\
-        & \textbf{5 Customers} & 7.53K & 12.8K & 1$<$ sec  & 29.1K & 85.9K & 2 sec  & 26$\%$  & 15$\%$   \\
+        & \textbf{1 Customer} & 5     & 6     & $<1$ sec  & 13     & 16     & $<1$ secs  & 38$\%$  & 37 $\%$  \\
+        & \textbf{2 Customers} & 51        & 77        & $<1$ sec  & 155        & 285       & $<1$ sec  & 33$\%$  & 27$\%$  \\
+        & \textbf{3 Customers} & 252       & 418       & $<1$ sec  & 842       & 1894       & $<1$ sec  & 30$\%$  & 22$\%$  \\
+        & \textbf{4 Customers} & 1.29K     & 2.21K     & $<1$ sec  & 4.75K     & 12.6K      & 1 sec     & 27$\%$  & 18$\%$   \\
+        & \textbf{5 Customers} & 7.53K & 12.8K & $<1$ sec  & 29.1K & 85.9K & 2 sec  & 26$\%$  & 15$\%$   \\
         & \textbf{6 Customers} & 51.6K & 84.7K & 3 secs  & 195.3K & 599.3K  & 9 secs  & 26$\%$  & 14$\% $  \\
         & \textbf{7 Customers} & 408K  & 650K  & 11 secs  & 1.46M  & 4.34M & 67 secs  & 28$\%$  & 15$\% $  \\
         \hline
         \end{tabular}
         \end{center}
-        \caption{Comparing the number of states and transitions in TTS and FTTS of three different example}
+        \caption{Comparing the number of states and transitions in TTS and FTTS of three different example (from~\cite{ehsan-phd-thesis})\fixme{Ehsan, would you please add the reference?
+        Do you mean $<1$ sec ?
+        Dont we have larger examples where tts is impossible but ftts is possible?}}
 \label{table::TTS-FTTS-experiment}
 \end{table*}
-\fixme{Ehsan, would you please add a table for experiments of FTTS here?}
+%\fixme{Ehsan, would you please add a table for experiments of FTTS here?}
 
 \begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
 reactiveclass RC1 (3) {
