@@ -1,11 +1,11 @@
 \begin{lstlisting}[language=rebeca,multicols=2]
-reactiveclass Node(){
+reactiveclass Node{
 	statevars{
 		int sn,ip;
 		int[] dsn,rst,hops,nhop;
 	}
-	msgsrv initial(int i, 
-			boolean starter){ 
+	Node(int i, boolean starter)
+	{ 
 		... /*Initialization code*/
 	}			
 	msgsrv rec_newpkt(int data,int dip_)
