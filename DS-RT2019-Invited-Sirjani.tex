@@ -67,7 +67,7 @@
 \begin{document}
 	
 	\title{%Reactive Actors in Isolation for Efficient Analysis \\
-	Reactive Actors: Isolation for Efficient Analysis 
+	Reactive Actors: Isolation for Efficient Analysis of Distributed Systems
 		\thanks{The authors would like to acknowledge DPAC and SEADA.}
 	}
 	
@@ -100,14 +100,18 @@ ehsank@ru.is}
 	\maketitle
 	
 	\begin{abstract}
-		\fixme{rewrite the abstract} In this paper, we will introduce timed reactive actors for modeling distributed systems and will explain our theories, techniques and tools for model checking and performance evaluation of such models.  Rebeca can be used to model asynchronous event-based components in systems, and in the extended version, Timed Rebeca, real time constraints can be captured in the language. We will explain how the isolation of actors, meaning no shared variable, non-preemptive execution of event handlers, and no blocking send or receive, help in developing more efficient analysis techniques. We show how floating-time transition system can be used for model checking of such models when we are interested in event-based properties, and how it helps in state space reduction. We explain how isolation of actors helps in distributed model checking? ... and how it helps in verification of MANETs. The same approach can be used in verification of swarms ...
+	In this paper we explain how the isolation or decoupling of actors can help in developing efficient analysis techniques. The Reactive Object Language, Rebeca, and its timed extension are introduced as actor-based languages for modeling and analyzing distributed systems.
+	%
+%	and will explain our theories, techniques and tools for model checking and performance evaluation of such models.  Rebeca can be used to model asynchronous event-based components in systems, and in the extended version, Timed Rebeca, real time constraints can be captured in the language. We will explain how the isolation of actors, meaning no shared variable, non-preemptive execution of event handlers, and no blocking send or receive, help in developing more efficient analysis techniques. 
+We show how floating-time transition system can be used for model checking of timed actor models when we are interested in event-based properties, and how it helps in state space reduction. We explain how the model of computation of actors helps in devising an efficient state distribution policy in distributed model checking. We show how we use Rebeca to  verify the routing algorithms of mobile adhoc networks. The paper is written in a way to make the ideas behind each technique clear such that it can be reused in similar domains.
 		
 		%I will show different applications of our approach including analysing a wireless sensor network application, mobile ad-hoc network protocols, network-on-chip designs, and a macroscopic agent-based simulation of urban planning.
 	\end{abstract}
 	
 	\begin{IEEEkeywords}
-		Actors, Real-time systems\end{IEEEkeywords}
+		Actors, real-time  systems, distributed systems, model checking\end{IEEEkeywords}
 	
+\fixme{Where should the acknowledgement be?}
 \input{Introduction.tex}
 %paragraphs in the Intro
 %\input{ReactiveSystems.tex}
