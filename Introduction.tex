@@ -78,19 +78,23 @@ Using \texttt{delay} we can model the computational time, using \texttt{after} w
 %\fixme{Syntax is messy}
 %\Marjan{I should write a bit about the syntax and the extension in TRebeca Maybe this part on syntax and ... better go to the previous section?}
 
+\fixme{Please read the following paragraph on isolation and see if it is correct and clear.}
 %Active objects and 
-Actors are encapsulated modules with no shared variables. In Rebeca, we also choose to have atomic execution of message servers (i.e. methods, or event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
-\Marjan{I should add here that why we can have atomic method execution without loss of generality, and ... maybe how we can model preemption?}
+Actors are encapsulated modules with no shared variables.
 Our actors are reactive, there is no explicit receive and the messages (i.e. events) trigger the execution of the message servers (i.e. event handlers) when they are taken from the message queue.  Our actors are also asynchronous, when sending a message they are not blocked. 
 So, there is no coupling via shared variables, no coupling because of waiting for another actor to return a value for a remote procedure call, and no coupling because of a context dependency caused by having a \textit{future}  construct in the language (\textit{futures} are mostly used in active object languages \cite{DBLP:journals/csur/BoerSHHRDJSKFY17}).
-This isolation of actors helps in more efficient analysis, and reduces the state space.
-Moreover, if we are only interested in the event-based properties we may be able to abstract even more and just keep the states that are followed by a transition which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events while abstracting away some of the states and transitions. 
+We call this decoupling of actors isolation, and use isolation of actors  in generating more efficient analysis techniques.
+%
+In Rebeca, we choose to have atomic execution of message servers (i.e. methods, or event handlers) which gives us a macro-step semantics and models a non-preemptive execution of the handlers.
+Macro-step semantics, by itself, helps in reducing the state space size significantly.
+The reason we can have atomic execution of message servers without loss of generality (in most cases\footnote{In some cases the behavior of a model may be different if we apply macro- or micro- semantics, or what we also call fine-grain and coarse-grain semantics. This discussion is out of scope of this paper.}) is the isolation of actors, and the fact that we assume non-preemptive execution of methods.
+%\Marjan{I should add here that why we can have atomic method execution without loss of generality, and ... maybe how we can model preemption?}
+%
+Moreover, if we are only interested in the event-based properties we may be able to abstract even more and just keep the states that are followed by a transition which we are interested in. This type of reduction is not straight forward as we need to prove that we are preserving the order of the events while abstracting away some of the states and transitions (see the following section for more explanation). 
 %This is what is done in partial order reduction.
 
 For explaining our approach, we distinguish three levels of abstraction: the distributed software system itself with all the implementation details, the modeling language which is Rebeca here, and the generated state space which is built for the sake of analysis and  we model it as a state transition system. There are alternative ways for analysis, like using logical theorems and applying reasoning based on that, but here we use different variations of state transition systems.
 We sometimes call the transition system the semantics of our model as it shows the behavior in a formal way.
-
-
-
-Floating Time Transition System is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
+%
+Floating Time Transition System, explained in the following section, is a natural event-based semantics for timed actors, giving us a significant amount of reduction in the state space, using a non-trivial novel idea.
 	
