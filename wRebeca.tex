@@ -1,4 +1,13 @@
 \section{Verification of Mobile Ad-hoc Protocols}\label{sec::wrebeca} 
+\begin{figure*}
+	\begin{center}
+		%	\begin{lstlisting}[language=rebeca,multicols=2]
+		\input{AODV-min.txt}
+		%	\end{lstlisting}
+	\end{center}
+	\caption{The AODV protocol specified by wRebeca \label{code:aodv}\cite{FOAC}}
+\end{figure*} 
+
 Mobile Ad-hoc wireless networks (MANETs) consist of mobile nodes equipped by wireless transceivers by which they communicate. These networks are applicable where no pre-existing infrastructure, such as routers in wired networks or access points in wireless networks 
 are available.  
 %as their nodes operate in a completely collaborative and distributed manner.
@@ -21,15 +30,27 @@ or the delivery fails ($\it unsucc$ in line $31$). %if the receiver node is not 
 The reply message is resent by the middle nodes (line $50$) until it arrives to the source node (line $47$).
 %\Marjan{you said the topology is at the level of the transition system, then how this succ and unsucc are handled?}\Fatem{The effect of communication operators are handled regarding the topology at the semantics. The modeler states what should executed if a unicast is succ/unsucc }
 
-
-\begin{figure*}
-	\begin{center}
-		%	\begin{lstlisting}[language=rebeca,multicols=2]
-		\input{AODV-min.txt}
-		%	\end{lstlisting}
-	\end{center}
-	\caption{The AODV protocol specified by wRebeca \label{code:aodv}\cite{FOAC}}
-\end{figure*} 
+\begin{table*}
+	%   \renewcommand{\arraystretch}{1.5}
+	\centering
+	\caption{Comparing the size of state spaces with/without applying topology-elimination reduction \cite{FOAC}.}
+	\begin{tabular*}{0.75\textwidth}{@{\extracolsep{\fill }} |   c  c  r  r  r  r  |   }
+		\hline
+		No. of & No. of  & No. of states    &  No. of transitions     & No. of states & No. of transitions
+		\\
+		nodes & topologies & before reduction  &  before reduction   & after reduction &  after reduction
+		\\
+		\hline	     
+		4 & 4 & 3,007 & 16,380 & 763  & 1,969 \\
+		4  & 8 & 12,327 & 113,480 & 1,554  & 3,804 \\
+		4  & 16 & 35,695 & 610,816 & 2,245 & 5,549 \\    
+		4  & 32 & 93,679 & 3,097,792 & 2,942 & 7,596 \\  
+		4    & 64  & 258,447  & 16,797,536 & 4,053 & 10,629 \\
+		5 & 16 & $>$655,441 & $>$11,276,879 & 165,959 &  598,342 \\
+		\hline
+	\end{tabular*}
+	\label{Tab:aodv-redu}
+\end{table*}
 
 To reason about MANET protocols by  model checking technique, the state transition systems of their models have to be generated. In wRebeca tool, the global states (denoted as $(S,\gamma)$) are defined by the local states of rebecs and the underlying topology.
 %
@@ -135,25 +156,5 @@ The macro-step semantics of Rebeca helps in reducing $\mathbb{S}$, and hence, ma
 Table \ref{Tab:aodv-redu} illustrates the amount of reduction achieved by applying topology-elimination reduction on isolated actors. To restrict the state-spaces generator in considering the possible topologies, we have enforced a set of stable connectivity/disconnectivity relations among the actors. This set are specified by network constraint at the \emph{constraints} block of the model. For instance, the network constraint given in line $68$ of Figure \ref{code:aodv} enforces the state-space generator to consider the topologies that $n_3$ is connected to $n_4$, expressed by ${\it con}(n_3,n_4)$. The second column of Table \ref{Tab:aodv-redu} indicates the number of possible topologies considered for generating the state space. When the number of nodes increases from $4$ to $5$ for AODV while the specified network constraint at the model results only $16$ possible topologies, the state space cannot be generated due to the memory limitation on a computer with $8${GB} {RAM}.  We proved that the reduced state space is branching bisimilar to the
 original one, and consequently a set of properties such as {ACTL-X} are preserved \cite{FOAC}. The network constraints on transition are used during model checking \cite{FORM,CSI2018} to verify the topology-sensitive properties. 
 
-\begin{table*}
-	%   \renewcommand{\arraystretch}{1.5}
-	\centering
-	\caption{Comparing the size of state spaces with/without applying topology-elimination reduction \cite{FOAC}.}
-	\begin{tabular*}{0.75\textwidth}{@{\extracolsep{\fill }} |   c  c  r  r  r  r  |   }
-		\hline
-		No. of & No. of  & No. of states    &  No. of transitions     & No. of states & No. of transitions
-		\\
-		nodes & topologies & before reduction  &  before reduction   & after reduction &  after reduction
-		\\
-		\hline	     
-		4 & 4 & 3,007 & 16,380 & 763  & 1,969 \\
-		4  & 8 & 12,327 & 113,480 & 1,554  & 3,804 \\
-		4  & 16 & 35,695 & 610,816 & 2,245 & 5,549 \\    
-		4  & 32 & 93,679 & 3,097,792 & 2,942 & 7,596 \\  
-		4    & 64  & 258,447  & 16,797,536 & 4,053 & 10,629 \\
-		5 & 16 & $>$655,441 & $>$11,276,879 & 165,959 &  598,342 \\
-		\hline
-	\end{tabular*}
-	\label{Tab:aodv-redu}
-\end{table*}
+
 

@@ -99,12 +99,76 @@ Listing \ref{src::FTTS-actor-model} shows a simple Rebeca model with two rebecs 
 $RC1$ has only one message server ($m1$) in which it triggers the two message servers of $RC2$ ($m2$ and $m3$).
 The two message servers of $RC2$ are event handlers that do nothing, i.e., there are no internal actions caused by statements like assignments, or \texttt{send}, and no  \texttt{delay} statements. Note that \texttt{send} statements are considered as internal or silent actions but they cause a change in the message queue of the receiver by adding the sent message to that queue.
  
+ 
+\begin{lstlisting}[language=rebeca, caption= A simple Timed Rebeca model with two rebecs, label=src::FTTS-actor-model]
+reactiveclass RC1 (3) {
+	knownrebecs {
+		RC2 r2;
+	}
+	RC1() {
+		self.m1();
+	}
+	msgsrv m1() {
+		delay(2); %PC = 1
+		r2.m2();  %PC = 2 
+		delay(2); %PC = 3 
+		r2.m3();  %PC = 4
+		self.m1() after (10); %PC = 5
+	}
+}
+reactiveclass RC2 (4) {
+	knownrebecs {
+		RC1 r1;
+	}
+	RC2() { }
+	msgsrv m2() { }
+	
+	msgsrv m3() { }
+}
+
+main {
+	RC1 r1(r2):();
+	RC2 r2(r1):();
+}
+
+\end{lstlisting}
+ 
 %\fixme{I am not sure if I have to use $m1$ or $m_1$, $r1$ or $r_1$}
 %\Fatem{I think you should use $m1$ and $r1$. You have Figure 2a and 2b by using the reference ref{fig::TTS} and ref{fig::FTTS}, please check me}
 Figure \ref{fig::TTS} shows the TTS generated for the model in Listing \ref{src::FTTS-actor-model}. 
 The constructor of $RC1$ puts the message $m_1$ in the queue of $RC1$. So, in $time=0$ we have the message $m_1$ in the queue of $r_1$ (see state $s_0$ in Figure \ref{fig::TTS}). Also, you see that the message queue of $r_2$ is empty. On the transition from $s_0$ to $s–1$ the message is taken from the queue of $r_1$, and in the state $s_1$ the method $m_1$ is ready to be executed, i.e., the Program Counter (PC) is at $m1:1$. The first statement in $m_1$ is a \texttt{delay} statement which is executed and pushes the time forward to $time=2$ in state $s_2$.
 In the state $s_2$, the PC points at a $send$ statement: $r_2.m_2()$. After this statement is executed as a silent or $\tau$ statement, we move to the state $s_3$ and have the message $m_2$ in the queue of $r–2$. The message $m_2$ is shown as $(m_2(), 2, \infty)$ in which $2$ is the timestamp of the message and $\infty$ is the value of \texttt{deadline}. The message can only be taken if and when the current time of receiver is greater than or equal its timestamp. If the current time of receiver is less than the timestamp and there is no transition of types  $\tau$  or \textit{event} enabled then the time of the receiver is advanced to the value of the timestamp (transition of type \textit{time}) and only then the message can be taken.
 
+\begin{figure}
+\centering
+\begin{subfigure}[b]{0.34\textwidth}
+%\subfigure[TTS]{
+%\label{fig::TTS}
+  \centering
+  \small{
+   \includegraphics[width=.8\textwidth]{resources/TTS.pdf}
+  }
+  \caption{TTS\label{fig::TTS}}
+%}
+\end{subfigure}
+%\qquad
+\begin{subfigure}[b]{0.14\textwidth}
+%\subfigure[FTTS]{
+%\label{fig::FTTS}
+  \centering
+  \small{
+   \includegraphics[width=.8\textwidth]{resources/FTTS.pdf}
+   \caption{FTTS}
+   \label{fig::FTTS}
+  }
+%}
+\end{subfigure}
+\caption{ TTS and FTTS for the Timed Rebeca model in Listing
+\ref{src::FTTS-actor-model}.
+%\fixme{Shall we add one more state to TTS such that the end transitions are the same?}
+}
+\label{fig::FTTSandTTS}
+\end{figure}
 
 On the transition from $s_3$ to $s_4$ the message $m_2$ is fetched to be executed, but the body of the message server $m_2$ is empty so nothing happens. We move from $s_4$ to $s_5$ by executing another \texttt{delay} statement and the time is progressed to four.
 At state $s_5$ the \texttt{send} statement is executed, the message is put in the queue of $r_2$ and we will get to the state $s_6$.
@@ -120,6 +184,7 @@ The FTTS for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::FT
 Another observation is that
 rebecs may have different current times (\textit{now}) in the same state. That is the reason we use the term \textit{floating time}.
 
+
 %
 The relation between TTS and FTTS of a Timed Rebeca model is not trivial and cannot be explained as partial order reduction, i.e., you may find states in FTTS which are not in TTS.
 For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS there are no similar states in TTS. Nevertheless, in \cite{DBLP:conf/facs2/KhamespanahSVK15} we proved a bisimulation relation between FTTS and TTS to prove that the order of events is preserved in FTTS.
@@ -128,17 +193,26 @@ For example in Figure \ref{fig::FTTSandTTS} for $3$ out of $5$ states in FTTS th
 This way, we have macro-step semantics where on each transition we take the enabled event (i.e. message) and execute the corresponding message server all in one transition. This is similar to the original semantics of Rebeca presented in \cite{DBLP:journals/fuin/SirjaniMSB04}, but here we have messages in the queue tagged by timestamps (in Timed Rebeca we usually call the message queues the message bag with time-tagged messages). The main technical point here is how to choose the message to take next. The algorithm for making the state space looks into the queues of all the rebecs and picks the message that is enabled \textit{earlier} than the others.  The tricky point is to get the definition of \textit{enabled earlier} correctly. The first idea that comes to mind is to pick the message with the least timestamp, but we also need to check the current time or \textit{now} of the receiver rebec. If the value of \textit{now} is larger than the timestamp then that would be the time that the message can really be taken. So,  for each rebec we need to find the maximum between  the timestamps and the value of  \textit{now} of the receiver rebec, and we need to do that for all the rebecs and all the messages in their queues,  and find the least among these values. That would be the message that will be taken first and will be the event on the next transition. There may be more than one message with that characteristic, and in that case the choice is nondeterministic.
 
 
+
+\begin{figure}
+\centering
+\includegraphics[width=.15\textwidth]{resources/BFTTS.pdf}
+\caption{ Bounded FTTS for the Timed Rebeca model in Listing \ref{src::FTTS-actor-model}.}
+\label{fig::BFTTS}
+\end{figure}
+
 The Bounded Floating Time Transition System (BFTTS) for Listing \ref{src::FTTS-actor-model} is shown in Figure \ref{fig::BFTTS}. 
 In many reactive systems the behavior becomes recurrent after a while, and it gives us the chance to have a bounded number of states and transitions. When we add the notion of time to our model and consequently to the transition system, when the time is increasing in the model we are at the risk of having an unbounded %\Ehsan{infinite instead of unbounded} 
 state space even when the behavior is recurrent.
 In BFTTS, if the only difference between two states is an equal shift in \textit{time-dependent} values (we call it \textit{shift-equivalency}) we merge those two states to one and will make the shift clear on the transition. %\Ehsan{Note that the future behavior of these two states are the same as there is no statement in Timed Rebeca that have access to the absolute time of the model.} 
 Note that this can work because there is no statement in Timed Rebeca that allows assigning an absolute value to \textit{now}, or accessing the absolute value of \textit{now} (if necessary, we may allow that but the modeler has to be careful not to break the shift-equivalency). 
 
-We have an example of a recurrent behavior in Figure \ref{fig::BFTTS}. After state $s_4$ we move to a state which is equivalent to state $s_2$ with a shift in both now variables (to be $18$ for $r_1$  and $16$ for $r_2$), and also a shift $14$ for the time tags of the messages (to be $28$ for the message in the queue of $r_1$ and $18$ for the message in the queue of $r_2$). So, we do not create a new state, instead we put a transition back to $s_2$, and make the shift of $14$ for the \textit{time-dependent} values clear on this transition. 
+We have an example of a recurrent behavior in Figure \ref{fig::BFTTS}. After state $s_4$ we move to a state which is equivalent to state $s_2$ with a shift in both now variables (to be $18$ for $r_1$  and $16$ for $r_2$), and also a shift $14$ for the time tags of the messages (to be $28$ for the message in the queue of $r_1$ and $18$ for the message in the queue of $r_2$). So, we do not create a new state, instead we put a transition back to $s_2$, and make the shift of $14$ for the \textit{time-dependent} values clear on this transition. The model checking tool of Timed Rebeca is developed using the idea of BFTTS to be able to generate bounded state spaces and it is integrated in Afra. To illustrate the efficiency of FTTS, the result of comparing the state space size and model checking time consumption of a set of Timed Rebeca examples are presented in Table~\ref{table::TTS-FTTS-experiment}.
 
 %\Marjan{Ehsan, would you please read the above paragraph? is it correct? can you add 1-2 sentences to say how we continue from where I stopped?}
 
 \begin{table*}
+    \small
   \begin{center}
           \begin{tabular}{|l|l|c|c|c|c|c|c|c|c|}
         \hline
@@ -176,12 +250,3 @@ We have an example of a recurrent behavior in Figure \ref{fig::BFTTS}. After sta
 \label{table::TTS-FTTS-experiment}
 \end{table*}
 %\fixme{Ehsan, would you please add a table for experiments of FTTS here?}
-
-
-
-\begin{figure}
-\centering
-\includegraphics[width=.15\textwidth]{resources/BFTTS.pdf}
-\caption{ Bounded FTTS for the Timed Rebeca model in Listing \ref{src::FTTS-actor-model}.}
-\label{fig::BFTTS}
-\end{figure}

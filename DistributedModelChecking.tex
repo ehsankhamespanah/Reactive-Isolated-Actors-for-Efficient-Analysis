@@ -57,7 +57,7 @@ main {
 \begin{subfigure}[b]{0.2\textwidth}
   \centering
   \small{
-   \includegraphics[width=.8\textwidth]{resources/clinger.pdf}
+   \includegraphics[width=.9\textwidth]{resources/clinger.pdf}
   }
   \caption{Clinger event diagram of the actor model in Listing \ref{src::actor-model}}
   \label{fig::clinger}
@@ -69,7 +69,7 @@ main {
 
   \centering
   \small{
-   \includegraphics[width=.8\textwidth]{resources/cdg.pdf}
+   \includegraphics[width=.9\textwidth]{resources/cdg.pdf}
   }
   \caption{CDG of the actor model in Listing \ref{src::actor-model}}
   \label{fig::cdg}
@@ -79,30 +79,8 @@ main {
 \label{fig::clinger-cdg}
 \end{figure}
 
-The most primitive and widely used distribution policy is the random state distribution \cite{DBLP:journals/entcs/GaravelMS13}. Random state distribution policy distributes states among nodes based on their hash values. Random distribution policy guarantees load balancing. However, it is not an effective technique as it scatters cycles in state spaces over different nodes. Note that detecting cycles of state spaces is crucial for model checking against LTL-like properties; so, splitting them among nodes (i.e., reducing locality of cycles) dramatically increases the time consumption of model checking. % time consumption. %In \cite{DBLP:journals/entcs/OrzanPE05}, another state space distribution policy is suggested to improve the locality of cycles. This policy is based on the static analysis of an abstracted model and detects \emph{may} or \emph{must} transition relations among states \cite{DBLP:conf/lics/LarsenT88}. Based on this analysis, if two states have a \emph{must} relation, they should be stored in a same node. We use a similar idea in our state distribution policy using CDG by partitioning causality relations of CDGs to \emph{may} and \emph{must} relations. 
-%In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that each cycle in the state space of an actor model 
-%is 
-%can be mapped to a sub-cycle \Marjan{Why sub-cycle and not cycle?} in the %corresponding CDG of that model. 
-%
-In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that there is a relation between cycles in state spaces of actor models 
-and cycles in their corresponding CDGs.
-%So, associating each cycle of a CDG with a computational node of distributed model checkers eliminates cycles which are scattered among different nodes. 
-So, we devise a distribution policy that is based on
-associating each cycle of a CDG with a computational node of our distributed model checker. When assigning the states of the state space to different nodes, we assign the state to the node which is associated to the corresponding CDG. This way, we reduce the number of cycles which are scattered among different nodes.
-%
-%\fixme{fix the following sentence - we need to explain more perhaps - I'll try to do that}
-In the case that there is a state in CDG which is shared among more than one cycle, the cycle that contains an edge which is associated with a \emph{must} label determines the host of the state. 
-%
-%\fixme{fix the following sentence- I'll try to do that}
-%In other cases, one of the possible cycles is randomly selected and the new state is distributed to its host. 
-When none of the cycles include a \emph{must} label then one of the cycles is randomly selected and the new state is distributed to its host. 
-%
-We have implemented the CDG-based distribution policy in the distributed model checking tool of Rebeca, and the result of using CDG-based distribution policy is shown in Table~\ref{ranomCDGMCTable-splitedge} for three different examples. Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumptions. % in practice.
-
-%So, we detect the \emph{must} relations among the states of an actor model considering the cycles of its corresponding CDG and putting them in the same node. 
-
 \begin{table*}
- {\scriptsize
+ {
  \begin{center}
           \begin{tabular}{|l|l|c|c|c|c|}
         \hline
@@ -130,6 +108,30 @@ We have implemented the CDG-based distribution policy in the distributed model c
         \end{center}
         }\caption{The number of split edges in the random and the CDG-based distribution policies (from \cite{DBLP:journals/eceasst/KhamespanahSMSR15}).}\label{ranomCDGMCTable-splitedge}
 \end{table*}
+
+The most primitive and widely used distribution policy is the random state distribution \cite{DBLP:journals/entcs/GaravelMS13}. Random state distribution policy distributes states among nodes based on their hash values. Random distribution policy guarantees load balancing. However, it is not an effective technique as it scatters cycles in state spaces over different nodes. Note that detecting cycles of state spaces is crucial for model checking against LTL-like properties; so, splitting them among nodes (i.e., reducing locality of cycles) dramatically increases the time consumption of model checking. % time consumption. %In \cite{DBLP:journals/entcs/OrzanPE05}, another state space distribution policy is suggested to improve the locality of cycles. This policy is based on the static analysis of an abstracted model and detects \emph{may} or \emph{must} transition relations among states \cite{DBLP:conf/lics/LarsenT88}. Based on this analysis, if two states have a \emph{must} relation, they should be stored in a same node. We use a similar idea in our state distribution policy using CDG by partitioning causality relations of CDGs to \emph{may} and \emph{must} relations. 
+%In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that each cycle in the state space of an actor model 
+%is 
+%can be mapped to a sub-cycle \Marjan{Why sub-cycle and not cycle?} in the %corresponding CDG of that model. 
+%
+In \cite{DBLP:journals/eceasst/KhamespanahSMSR15} we proved that there is a relation between cycles in state spaces of actor models 
+and cycles in their corresponding CDGs.
+%So, associating each cycle of a CDG with a computational node of distributed model checkers eliminates cycles which are scattered among different nodes. 
+So, we devise a distribution policy that is based on
+associating each cycle of a CDG with a computational node of our distributed model checker. When assigning the states of the state space to different nodes, we assign the state to the node which is associated to the corresponding CDG. This way, we reduce the number of cycles which are scattered among different nodes.
+%
+%\fixme{fix the following sentence - we need to explain more perhaps - I'll try to do that}
+In the case that there is a state in CDG which is shared among more than one cycle, the cycle that contains an edge which is associated with a \emph{must} label determines the host of the state. 
+%
+%\fixme{fix the following sentence- I'll try to do that}
+%In other cases, one of the possible cycles is randomly selected and the new state is distributed to its host. 
+When none of the cycles include a \emph{must} label then one of the cycles is randomly selected and the new state is distributed to its host. 
+%
+We have implemented the CDG-based distribution policy in the distributed model checking tool of Rebeca, and the result of using CDG-based distribution policy is shown in Table~\ref{ranomCDGMCTable-splitedge} for three different examples. Experimental evidence supports that this new policy improves cycles locality, and decreases the model checking time and memory consumptions. % in practice.
+
+%So, we detect the \emph{must} relations among the states of an actor model considering the cycles of its corresponding CDG and putting them in the same node. 
+
+
 
 For using similar techniques in distribution of states to nodes, we can think of System Dependence Graphs (SDG) that is presented as an standard formalism to model structures and dependencies in programs \cite{DBLP:conf/scam/Graf10}. SDGs are the basis for multiple applications in program analysis, such as slicing and testing. Similar to CDGs for actor-based models, SDGs can be used in showing causality relations in models, but for a wider range of textual imperative modeling languages including the model checking languages of Promela \cite{Holzmann:2011:SMC:2029108} and NuSMV \cite{Cimatti:1999:NNS:647768.733923}.
 However, as all the dependencies between the statements of models are shown in SDGs, there are many cycles in SDGs which are not related to cycles in the state space. 
