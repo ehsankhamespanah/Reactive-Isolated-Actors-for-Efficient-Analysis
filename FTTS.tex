@@ -63,9 +63,9 @@
 
 Floating Time Transition System (FTTS) is proposed based on the isolation of timed rebecs \cite{DBLP:conf/facs2/KhamespanahSVK15,DBLP:journals/scp/KhamespanahSSKI15}. The idea behind FTTS is similar to partial order reduction (POR) but the technique does not fit exactly in the definition of POR. 
 %
-In POR we exploit the commutativity of concurrently executed transitions, which result in the same state when executed in different orders. So, we can only expand a representative subset of all enabled transitions and abstract the rest away while preserving the properties of interest. %This way the properties are preserved. 
+In POR we exploit the commutativity of concurrently executed transitions, which result in the same state when executed in different orders. So, we can expand only a representative subset of all enabled transitions and abstract the rest away while preserving the properties of interest. %This way the properties are preserved. 
 %
-If we consider the standard Timed Transitions System semantics (TTS) of Timed Rebeca, we cannot say that FTTS is derived from TTS by POR, because we are not only abstracting away some of the transitions we are also changing the states. You cannot necessarily find one state in FTTS which is the same as a state in TTS. Both states and transitions are changed while the order of events are preserved (you may see the proof of property preservation in \cite{DBLP:conf/facs2/KhamespanahSVK15}).
+If we consider the standard Timed Transitions System semantics (TTS) of Timed Rebeca, we cannot say that FTTS is derived from TTS by POR, because we are not only abstracting away some of the transitions; we are also changing the states. You cannot necessarily find one state in FTTS which is the same as a state in TTS. Both states and transitions are changed while the order of events are preserved (you may see the proof of property preservation in \cite{DBLP:conf/facs2/KhamespanahSVK15}).
 %
 
 What we mean by floating time is that in each state of the state space, different actors do not necessarily have the same local clock, i.e.,  actors are not synchronised on their local time in the state space. We consider this as letting the time \textit{float} across the actors in the state space. 
@@ -78,7 +78,7 @@ For that assumption to be valid and faithful enough to the system,  we rely on t
 
 In Timed Rebeca we have a concept of time and we can consider that each statement is executed at a certain point in time. Note that we are now talking at the level of the Rebeca model, the notion of time is the model time, and we do not need to worry about synchronising the clocks among different components in the distributed system (which are modeled as actors in our Rebeca model). We assume that local clocks of actors are synchronised and we  have time stamps on each statement  in the actors which are comparable across the actors.
 
-In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computation delay. Other statements are assumed to be executed in zero time. We use  \texttt{after(t)} in combination with a \texttt{send} message statement, it means that the time stamp of the message when it is put in the queue of the receiver is the value of the local clock of the sender (\texttt{now} in the sender) plus the value of \texttt{t}.
+In Timed Rebeca models, we use a \texttt{delay(t)} statement to show the computation delay. Other statements are assumed to be executed in zero time. We use  \texttt{after(t)} in combination with a \texttt{send} message statement; it means that the time stamp of the message when it is put in the queue of the receiver is the value of the local clock of the sender (\texttt{now} in the sender) plus the value of \texttt{t}.
 The progress of time is forced by the \texttt{delay} statement and also by \texttt{after}. 
 We can assume that the time stamp of all the statements are zero when a model starts to execute, then in each actor the local time is increased by value of \texttt{t} if there is a \texttt{delay(t)} statement.
 A \texttt{send} statement with an  \texttt{after} does not cause any increase in the local time per se. The statement following the \texttt{send} statement has the same time stamp as the \texttt{send} statement itself.
@@ -91,7 +91,7 @@ The progress of time happens in the case that the time stamp of the message is g
 The \texttt{after} construct can be used to model the network delay, and also to model periodic events.
 
 
-If we use the standard Timed Transition System (TTS) to generate the state space for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
+If we use the standard Timed Transition System (TTS) to generate the state space, for Timed Rebeca model we distinguish three types of transitions: $\tau$ transitions, \textit{events}, and \textit{timed} transitions.
 In FTTS we reduce that to only \textit{events} transitions.
 %
 We explain TTS and FTTS for Timed Rebeca using an example in Listing \ref{src::FTTS-actor-model}.
